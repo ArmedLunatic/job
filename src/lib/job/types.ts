@@ -1,6 +1,5 @@
 // ─── Employee Wall — core types ───────────────────────────────────────────────
 
-/** Job roles shown on the wall card. */
 export type Role =
   | "engineer"
   | "designer"
@@ -10,24 +9,21 @@ export type Role =
   | "leadership"
   | "other";
 
-/**
- * Decorative stamp overlaid on the generated card image.
- * Maps 1-to-1 to asset filenames in /public/stamps/.
- */
 export type Stamp = "none" | "star" | "rocket" | "crown" | "lightning" | "heart";
+
+/** File to upload, or "default" to use the mascot icon */
+export type AvatarSource = File | "default";
 
 /**
  * Row shape returned from the `employees` Supabase table.
- * Mirrors the schema defined in docs/employee-wall.md.
  */
 export type EmployeeRow = {
-  id: string;           // uuid primary key
-  created_at: string;  // ISO-8601
+  id: string;
+  created_at: string;
   username: string;
   role: Role;
   stamp: Stamp;
-  /** Public URL of the photo in the `employee-photos` storage bucket. */
-  photo_url: string;
-  /** Public URL of the generated card image — populated in Step 2. */
-  card_url: string | null;
+  badge_url: string;
+  job_card_url: string;
+  consent: boolean;
 };
