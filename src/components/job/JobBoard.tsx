@@ -171,16 +171,22 @@ export default function JobBoard() {
   return (
     <section id="job-board" className="w-full py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mb-12 text-center">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-blue-400">
-            Open Positions
-          </p>
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Job Board
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-base text-neutral-400">
-            Pick your role. Copy the shill script. Clock in. Get paid.
-          </p>
+        <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-blue-400">
+              Open Positions
+            </p>
+            <h2 className="font-mono text-xl font-bold uppercase tracking-tight text-white sm:text-2xl">
+              OPEN POSITIONS — ALL DEPARTMENTS
+            </h2>
+            <p className="mt-2 max-w-xl text-sm text-neutral-400">
+              Pick your role. Copy the shill script. Clock in. Get paid.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 rounded border border-neutral-700 bg-neutral-900 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
+            UPDATED: LIVE
+          </span>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -208,84 +214,101 @@ function JobCardItem({
   onCopy: () => void;
 }) {
   const [showScript, setShowScript] = useState(false);
+  const refNum = `JB-${String(job.id).padStart(3, "0")}`;
 
   return (
     <div
-      className={`group flex flex-col rounded-2xl border border-neutral-800 border-l-4 ${job.borderColor} bg-neutral-900/50 p-5 transition-all duration-200 hover:border-neutral-600 hover:bg-neutral-900 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/50`}
+      className={`group flex flex-col rounded border border-neutral-800 border-l-4 ${job.borderColor} bg-neutral-900/50 transition-all duration-200 hover:border-neutral-600 hover:bg-neutral-900`}
     >
-      {/* Header */}
-      <div className="mb-4 flex items-start justify-between gap-2">
-        <div>
-          <span className="text-2xl">{job.emoji}</span>
-          <h3 className="mt-1.5 text-sm font-semibold leading-snug text-white">
-            {job.title}
-          </h3>
-          <p className="mt-0.5 text-xs text-neutral-500 capitalize">{job.role}</p>
-        </div>
+      {/* Card header bar */}
+      <div className="flex items-center justify-between border-b border-neutral-800 bg-neutral-900 px-4 py-2">
+        <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+          REF: {refNum}
+        </span>
         <span
-          className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold text-white ${job.multiplierColor}`}
+          className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold text-white ${job.multiplierColor}`}
         >
           {job.multiplier}
         </span>
       </div>
 
-      {/* Description */}
-      <p className="mb-4 text-xs leading-relaxed text-neutral-400">
-        {job.description}
-      </p>
+      <div className="flex flex-1 flex-col p-4">
+        {/* Title + emoji */}
+        <div className="mb-3">
+          <div className="mb-1 text-xl">{job.emoji}</div>
+          <h3 className="text-sm font-semibold leading-snug text-white">
+            {job.title}
+          </h3>
+          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            DEPT: {job.role}
+          </p>
+        </div>
 
-      {/* Tasks */}
-      <ul className="mb-5 flex-1 space-y-1.5">
-        {job.tasks.map((t, i) => (
-          <li key={i} className="flex items-start gap-2 text-xs text-neutral-400">
-            <span className="mt-0.5 shrink-0 text-blue-400/70">→</span>
-            <span>{t}</span>
-          </li>
-        ))}
-      </ul>
+        {/* Description */}
+        <p className="mb-4 text-xs leading-relaxed text-neutral-400">
+          {job.description}
+        </p>
 
-      {/* Actions */}
-      <div className="space-y-2">
-        {/* Shill script toggle */}
-        <button
-          type="button"
-          onClick={() => setShowScript((v) => !v)}
-          className="w-full rounded-lg border border-neutral-700 px-3 py-2 text-xs font-medium text-neutral-400 transition-colors hover:border-neutral-500 hover:text-white"
-        >
-          {showScript ? "Hide script ↑" : "Show shill script ↓"}
-        </button>
+        {/* Tasks */}
+        <div className="mb-5 flex-1">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-600">
+            RESPONSIBILITIES:
+          </p>
+          <ul className="space-y-1.5">
+            {job.tasks.map((t, i) => (
+              <li key={i} className="flex items-start gap-2 text-xs text-neutral-400">
+                <span className="mt-0.5 shrink-0 text-blue-400/70">▸</span>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-        {showScript && (
-          <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-3">
-            {/* Terminal header */}
-            <div className="mb-2 flex items-center gap-1.5">
-              <span className="text-green-400 font-mono text-xs">$&gt;</span>
-              <span className="text-neutral-600 font-mono text-[10px] uppercase tracking-widest">shill_script.txt</span>
+        {/* Actions */}
+        <div className="space-y-2">
+          {/* Shill script toggle */}
+          <button
+            type="button"
+            onClick={() => setShowScript((v) => !v)}
+            className="w-full rounded border border-neutral-700 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400 transition-colors hover:border-neutral-500 hover:text-white"
+          >
+            {showScript ? "▴ HIDE" : "▾ VIEW TALKING POINTS"}
+          </button>
+
+          {showScript && (
+            <div className="rounded border border-neutral-800 bg-neutral-950 p-3">
+              {/* Terminal header */}
+              <div className="mb-2 flex items-center gap-1.5">
+                <span className="font-mono text-xs text-green-400">$&gt;</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-600">
+                  shill_script.txt
+                </span>
+              </div>
+              <p className="mb-3 font-mono text-xs leading-relaxed text-neutral-300">
+                {job.shillScript}
+              </p>
+              <button
+                type="button"
+                onClick={onCopy}
+                className={`rounded px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-white transition-all active:scale-95 ${
+                  copied
+                    ? "bg-green-600 shadow-sm shadow-green-600/30"
+                    : "bg-blue-600 hover:bg-blue-500"
+                }`}
+              >
+                {copied ? "✓ COPIED" : "COPY TO CLIPBOARD"}
+              </button>
             </div>
-            <p className="mb-3 text-xs leading-relaxed text-neutral-300 font-mono">
-              {job.shillScript}
-            </p>
-            <button
-              type="button"
-              onClick={onCopy}
-              className={`rounded-md px-3 py-1.5 text-xs font-semibold text-white transition-all active:scale-95 ${
-                copied
-                  ? "bg-green-600 shadow-sm shadow-green-600/30"
-                  : "bg-blue-600 hover:bg-blue-500"
-              }`}
-            >
-              {copied ? "✓ Copied!" : "Copy"}
-            </button>
-          </div>
-        )}
+          )}
 
-        {/* Clock in with this role */}
-        <a
-          href="#clock-in"
-          className="block w-full rounded-lg border border-neutral-800 px-3 py-2 text-center text-xs font-medium text-neutral-400 transition-all hover:border-blue-500/50 hover:text-blue-400"
-        >
-          Clock in as {job.role} →
-        </a>
+          {/* Clock in with this role */}
+          <a
+            href="#clock-in"
+            className="block w-full rounded border border-neutral-800 px-3 py-2 text-center font-mono text-[10px] uppercase tracking-widest text-neutral-400 transition-all hover:border-blue-500/50 hover:text-blue-400"
+          >
+            → APPLY FOR THIS ROLE
+          </a>
+        </div>
       </div>
     </div>
   );

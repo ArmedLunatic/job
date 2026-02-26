@@ -12,6 +12,10 @@
   /* Grid */
   --grid-color: rgba(255, 255, 255, 0.06);
   --grid-size: 60px;
+
+  /* Portal chrome */
+  --border: #2a2a2a;
+  --surface: #111111;
 }
 
 @theme inline {
@@ -101,3 +105,57 @@ body {
 .delay-240 { animation-delay: 240ms; }
 .delay-320 { animation-delay: 320ms; }
 .delay-400 { animation-delay: 400ms; }
+
+/* ─── Portal utility classes ────────────────────────────────────────────────── */
+
+/* Hard-bordered panel with surface bg */
+.portal-panel {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+/* Mono ALL-CAPS label bar at top of portal-panel */
+.portal-header {
+  background: #171717;
+  border-bottom: 1px solid var(--border);
+  padding: 0.4rem 1.25rem;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #525252;
+}
+
+/* Numbered section divider inside form */
+.form-step {
+  border-left: 2px solid #404040;
+  padding-left: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+/* Mono step label inside .form-step */
+.form-step-label {
+  display: block;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #525252;
+}
+
+/* <kbd>-like field label chip */
+.kbd-label {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #404040;
+  background: #171717;
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #737373;
+}

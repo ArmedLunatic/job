@@ -83,33 +83,37 @@ export default function PublishPanel({
 
   if (state === "done") {
     return (
-      <div className="rounded-xl border border-green-800/40 bg-green-950/30 px-5 py-4">
-        <p className="text-sm font-semibold text-green-400">
-          You&apos;re on the wall! 🎉
+      <div className="rounded border border-green-800 bg-green-950/30 px-5 py-4">
+        <p className="font-mono text-xs font-semibold uppercase tracking-widest text-green-400">
+          SUBMISSION CONFIRMED
         </p>
         <p className="mt-1 text-xs text-neutral-400">
           Your badge is live on the Employee Wall.
         </p>
         <Link
           href="/employees"
-          className="mt-3 inline-block rounded-lg bg-green-600 px-4 py-2 text-xs font-semibold text-white hover:bg-green-500 transition-colors"
+          className="mt-3 inline-block rounded border border-green-700 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-widest text-green-400 transition-colors hover:bg-green-900/30"
         >
-          View Employee Wall →
+          VIEW EMPLOYEE RECORDS →
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 rounded-xl border border-neutral-800 bg-neutral-900/50 px-5 py-5">
+    <div className="space-y-4 rounded border border-neutral-800 bg-neutral-900/50 px-5 py-5">
+      {/* Header */}
       <div>
-        <p className="text-sm font-semibold text-white">Publish to Employee Wall</p>
-        <p className="mt-0.5 text-xs text-neutral-500">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-neutral-600">
+          SECTION 05 — RECORD SUBMISSION
+        </p>
+        <p className="mt-1 text-xs text-neutral-500">
           Optional — uploads images to a public gallery. Nothing is sent without your consent.
         </p>
       </div>
 
-      <label className="flex cursor-pointer items-start gap-3">
+      {/* Consent signature block */}
+      <label className="flex cursor-pointer items-start gap-3 border-b border-dashed border-neutral-700 pb-4">
         <input
           type="checkbox"
           checked={consent}
@@ -123,7 +127,7 @@ export default function PublishPanel({
       </label>
 
       {error && (
-        <p className="rounded-lg bg-red-950/40 border border-red-800/40 px-3 py-2 text-xs text-red-400">
+        <p className="rounded border border-red-800/40 bg-red-950/40 px-3 py-2 text-xs text-red-400">
           {error}
         </p>
       )}
@@ -132,9 +136,9 @@ export default function PublishPanel({
         type="button"
         onClick={handlePublish}
         disabled={!consent || state === "uploading"}
-        className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
+        className="w-full rounded bg-blue-600 px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        {state === "uploading" ? "Publishing…" : "Publish to Employee Wall"}
+        {state === "uploading" ? "SUBMITTING…" : "SUBMIT TO EMPLOYEE WALL"}
       </button>
     </div>
   );

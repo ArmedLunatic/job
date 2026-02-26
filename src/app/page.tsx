@@ -16,33 +16,21 @@ export default function Home() {
           }}
         />
 
-        {/* Primary blue glow — center */}
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-[700px] w-[700px] rounded-full bg-blue-600/15 blur-[140px]" />
-        </div>
-
-        {/* Secondary amber glow — bottom-right offset */}
-        <div className="pointer-events-none absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4">
-          <div className="h-[400px] w-[400px] rounded-full bg-amber-500/6 blur-[120px]" />
-        </div>
-
         {/* Hero bottom fade */}
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-neutral-950" />
 
         <div className="relative z-10 max-w-4xl space-y-8">
-          {/* Badge */}
-          <div
-            className="animate-fade-in-up delay-0 inline-flex items-center gap-2 rounded-full border border-neutral-700/80 bg-neutral-900/80 px-4 py-1.5 text-xs font-medium text-neutral-300 backdrop-blur-sm"
-          >
+          {/* Status badge */}
+          <div className="animate-fade-in-up delay-0 inline-flex items-center gap-2 rounded border border-neutral-700 bg-neutral-900 px-3 py-1 font-mono text-[10px] tracking-widest text-neutral-400">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.8)]" />
-            Now hiring — all positions open
+            HIRING: ACTIVE
           </div>
 
           {/* Headline */}
           <h1
             className="animate-fade-in-up delay-80 text-5xl font-black leading-[1.05] tracking-tight text-white sm:text-7xl lg:text-8xl"
           >
-            <span className="animate-glitch inline-block">AI TOOK</span>
+            <span className="inline-block">AI TOOK</span>
             <br />
             <span className="text-blue-400">YOUR JOB.</span>
           </h1>
@@ -62,19 +50,19 @@ export default function Home() {
           <div className="animate-fade-in-up delay-320 flex flex-wrap items-center justify-center gap-3">
             <a
               href="#clock-in"
-              className="rounded-xl bg-blue-600 px-7 py-3.5 text-sm font-bold text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-600/30 active:scale-95"
+              className="rounded bg-blue-600 px-7 py-3.5 text-sm font-bold text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-600/30 active:scale-95"
             >
               Clock In →
             </a>
             <a
               href="#job-board"
-              className="rounded-xl border border-neutral-700 bg-neutral-900/80 px-7 py-3.5 text-sm font-bold text-white transition-all hover:border-neutral-500 hover:bg-neutral-800 active:scale-95"
+              className="rounded border border-neutral-700 bg-neutral-900 px-7 py-3.5 text-sm font-bold text-white transition-all hover:border-neutral-500 hover:bg-neutral-800 active:scale-95"
             >
               View Job Board
             </a>
             <a
               href="/employees"
-              className="rounded-xl border border-neutral-800/80 px-7 py-3.5 text-sm font-medium text-neutral-400 transition-all hover:text-white hover:border-neutral-600 active:scale-95"
+              className="rounded border border-neutral-800 px-7 py-3.5 text-sm font-medium text-neutral-400 transition-all hover:text-white hover:border-neutral-600 active:scale-95"
             >
               Employee Wall
             </a>
@@ -94,32 +82,36 @@ export default function Home() {
           >
             <path d="M12 5v14M5 12l7 7 7-7" />
           </svg>
-          <span className="text-[10px] tracking-widest uppercase font-medium">scroll</span>
+          <span className="font-mono text-[10px] tracking-widest uppercase">SCROLL FOR POSITIONS</span>
         </div>
       </section>
 
       {/* ── Stats bar ─────────────────────────────────────────────────────────── */}
-      <section className="border-y border-neutral-800/60 bg-neutral-900/20 py-8">
+      <section className="border-y border-neutral-700 bg-neutral-900/20 py-6">
         <div className="mx-auto max-w-4xl px-6">
+          <p className="mb-4 font-mono text-[10px] tracking-widest uppercase text-neutral-700">
+            SYSTEM INFO
+          </p>
           <div className="grid grid-cols-2 gap-0 sm:grid-cols-4">
             {[
-              { label: "Employees hired", value: "∞" },
-              { label: "Resumes required", value: "0" },
-              { label: "Bosses", value: "0" },
-              { label: "Payroll source", value: "Fees" },
+              { label: "EMPLOYEES HIRED", value: "∞" },
+              { label: "RESUMES REQUIRED", value: "0" },
+              { label: "BOSSES", value: "0" },
+              { label: "PAYROLL SOURCE", value: "Fees" },
             ].map((s, i) => (
               <div
                 key={s.label}
                 className={`
                   relative flex flex-col items-center justify-center py-4 text-center
-                  ${i > 0 ? "border-l border-neutral-800/60" : ""}
+                  ${i > 0 ? "border-l border-neutral-800" : ""}
                 `}
               >
-                <div className="mb-2 h-0.5 w-8 rounded-full bg-blue-500/40" />
+                <p className="mb-2 font-mono text-[10px] tracking-widest uppercase text-neutral-600">
+                  [{s.label}]
+                </p>
                 <p className="text-2xl font-black text-white sm:text-3xl tabular-nums">
                   {s.value}
                 </p>
-                <p className="mt-1 text-xs text-neutral-500 tracking-wide">{s.label}</p>
               </div>
             ))}
           </div>
@@ -184,18 +176,18 @@ function FaqSection() {
   return (
     <section className="py-24">
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <div className="mb-12 text-center">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-blue-400">
-            Questions
+        <div className="mb-10">
+          <p className="mb-1 font-mono text-[10px] tracking-widest uppercase text-neutral-600">
+            DOC REF: HR-FAQ-001
           </p>
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            FAQ
+          <h2 className="font-mono text-lg font-bold tracking-tight text-white sm:text-xl uppercase">
+            HR POLICY — FREQUENTLY ASKED QUESTIONS
           </h2>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {FAQS.map((faq, i) => (
-            <FaqItem key={i} q={faq.q} a={faq.a} />
+            <FaqItem key={i} q={faq.q} a={faq.a} index={i} />
           ))}
         </div>
       </div>
@@ -203,23 +195,18 @@ function FaqSection() {
   );
 }
 
-function FaqItem({ q, a }: { q: string; a: string }) {
+function FaqItem({ q, a, index }: { q: string; a: string; index: number }) {
+  const prefix = `Q.${String(index + 1).padStart(2, "0")} —`;
   return (
-    <details className="group rounded-xl border border-neutral-800 bg-neutral-900/40 px-5 transition-all open:border-neutral-700 open:bg-neutral-900/70">
+    <details className="group rounded-sm border border-neutral-800 border-l-2 border-l-neutral-700 open:border-l-blue-500 bg-neutral-900/40 px-5 transition-all open:border-neutral-700 open:bg-neutral-900/70">
       <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm font-semibold text-white select-none">
-        {q}
-        <span className="ml-4 shrink-0 text-neutral-500 transition-transform duration-200 group-open:rotate-180 group-open:text-blue-400">
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+        <span>
+          <span className="mr-2 font-mono text-[10px] text-neutral-500">{prefix}</span>
+          {q}
+        </span>
+        <span className="ml-4 shrink-0 font-mono text-sm text-neutral-500 group-open:text-blue-400">
+          <span className="group-open:hidden">+</span>
+          <span className="hidden group-open:inline">×</span>
         </span>
       </summary>
       <div className="border-t border-neutral-800/60 pt-3 pb-5">
