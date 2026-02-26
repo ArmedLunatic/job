@@ -1,8 +1,17 @@
 @import "tailwindcss";
 
+/* ─── Design tokens ──────────────────────────────────────────────────────────── */
 :root {
   --background: #0a0a0a;
   --foreground: #f8fafc;
+
+  /* Glow radii */
+  --glow-blue:  rgba(59, 130, 246, 0.15);
+  --glow-amber: rgba(245, 158, 11, 0.06);
+
+  /* Grid */
+  --grid-color: rgba(255, 255, 255, 0.06);
+  --grid-size: 60px;
 }
 
 @theme inline {
@@ -12,6 +21,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* ─── Base ───────────────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
 }
@@ -21,3 +31,73 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+/* ─── Keyframes ──────────────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes tickFlash {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+@keyframes liveBlip {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.75); }
+}
+
+@keyframes glitchShift {
+  0%,  92%, 100% { clip-path: none; transform: none; }
+  93%  { clip-path: inset(10% 0 80% 0); transform: translateX(-4px); }
+  95%  { clip-path: inset(60% 0 20% 0); transform: translateX(4px); }
+  97%  { clip-path: inset(30% 0 55% 0); transform: translateX(-2px); }
+}
+
+/* ─── Animation utility classes ─────────────────────────────────────────────── */
+.animate-fade-in-up {
+  animation: fadeInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.4s ease-in-out infinite;
+}
+
+.animate-live-blip {
+  animation: liveBlip 1.8s ease-in-out infinite;
+}
+
+.animate-tick-flash {
+  animation: tickFlash 1s step-end infinite;
+}
+
+.animate-glitch {
+  animation: glitchShift 6s ease-in-out infinite;
+}
+
+/* delay utilities */
+.delay-0   { animation-delay:   0ms; }
+.delay-80  { animation-delay:  80ms; }
+.delay-160 { animation-delay: 160ms; }
+.delay-240 { animation-delay: 240ms; }
+.delay-320 { animation-delay: 320ms; }
+.delay-400 { animation-delay: 400ms; }

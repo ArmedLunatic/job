@@ -46,6 +46,7 @@ export default function ClockInForm() {
   const [genError, setGenError] = useState<string | null>(null);
 
   const canGenerate = username.trim().length >= 2;
+  const usernameValid = username.trim().length >= 2;
   const avatarSource: AvatarSource =
     avatarMode === "upload" && avatarFile ? avatarFile : "default";
 
@@ -120,14 +121,21 @@ export default function ClockInForm() {
               <label className="block text-xs font-semibold uppercase tracking-widest text-neutral-500">
                 Username
               </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="@satoshi"
-                maxLength={25}
-                className="w-full rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-sm text-white placeholder:text-neutral-600 outline-none transition-colors focus:border-neutral-600 focus:ring-1 focus:ring-white/10"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="@satoshi"
+                  maxLength={25}
+                  className="w-full rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 pr-10 text-sm text-white placeholder:text-neutral-600 outline-none transition-all focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/20"
+                />
+                {usernameValid && (
+                  <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-green-400 text-base">
+                    ✓
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Role */}
@@ -138,7 +146,7 @@ export default function ClockInForm() {
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value as Role)}
-                className="w-full rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-sm text-white outline-none transition-colors focus:border-neutral-600 focus:ring-1 focus:ring-white/10"
+                className="w-full rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-sm text-white outline-none transition-all focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/20"
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -159,13 +167,13 @@ export default function ClockInForm() {
                     key={s.value}
                     type="button"
                     onClick={() => setStamp(s.value)}
-                    className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-all ${
+                    className={`flex items-center gap-2 rounded-lg border px-4 py-2.5 text-xs font-semibold transition-all active:scale-95 ${
                       stamp === s.value
-                        ? "border-blue-500 bg-blue-600/20 text-blue-300"
+                        ? "border-blue-500 bg-blue-600/20 text-blue-300 shadow-sm shadow-blue-600/20"
                         : "border-neutral-800 bg-neutral-900 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300"
                     }`}
                   >
-                    <span>{s.emoji}</span>
+                    <span className="text-base">{s.emoji}</span>
                     <span>{s.label}</span>
                   </button>
                 ))}
@@ -185,7 +193,7 @@ export default function ClockInForm() {
                     key={m}
                     type="button"
                     onClick={() => setAvatarMode(m)}
-                    className={`flex-1 rounded-lg border px-3 py-2 text-xs font-medium transition-all ${
+                    className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition-all active:scale-95 ${
                       avatarMode === m
                         ? "border-blue-500 bg-blue-600/20 text-blue-300"
                         : "border-neutral-800 bg-neutral-900 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300"
@@ -198,7 +206,7 @@ export default function ClockInForm() {
 
               {/* Default mascot preview */}
               {avatarMode === "default" && (
-                <div className="flex items-center gap-3 rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3">
+                <div className="flex items-center gap-3 rounded-xl border border-neutral-800 bg-neutral-900/60 px-4 py-3">
                   <div className="relative h-12 w-12 overflow-hidden rounded-full border border-neutral-700">
                     <Image
                       src="/job/job-icon.png"
@@ -208,7 +216,7 @@ export default function ClockInForm() {
                     />
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-neutral-300">
+                    <p className="text-xs font-semibold text-neutral-300">
                       $JOB Mascot
                     </p>
                     <p className="text-xs text-neutral-600">
@@ -221,7 +229,7 @@ export default function ClockInForm() {
               {/* File upload */}
               {avatarMode === "upload" && (
                 <label
-                  className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-neutral-700 bg-neutral-900 py-8 transition-colors hover:border-neutral-500"
+                  className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-neutral-700 bg-neutral-900/40 py-8 transition-all hover:border-blue-500/50 hover:bg-neutral-800/50"
                   onClick={() => fileRef.current?.click()}
                 >
                   {preview ? (
@@ -266,7 +274,7 @@ export default function ClockInForm() {
                 type="button"
                 disabled={!canGenerate || generating !== null}
                 onClick={handleGenAlert}
-                className="flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-neutral-950 transition-all hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-30"
+                className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-600/25 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
               >
                 {generating === "alert" ? (
                   <>
@@ -281,7 +289,7 @@ export default function ClockInForm() {
                 type="button"
                 disabled={!canGenerate || generating !== null}
                 onClick={handleGenBadge}
-                className="flex items-center justify-center gap-2 rounded-xl border border-neutral-700 bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition-all hover:border-neutral-500 disabled:cursor-not-allowed disabled:opacity-30"
+                className="flex items-center justify-center gap-2 rounded-xl border border-neutral-700 bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition-all hover:border-neutral-500 hover:bg-neutral-800 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
               >
                 {generating === "badge" ? (
                   <>
@@ -313,8 +321,12 @@ export default function ClockInForm() {
                 <BadgePreview result={badgeResult} />
               </>
             ) : (
-              <div className="flex h-64 items-center justify-center rounded-2xl border border-dashed border-neutral-800 text-sm text-neutral-700">
-                Previews appear here after generation
+              <div className="relative flex h-64 flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-dashed border-neutral-800 text-center">
+                {/* Shimmer sweep */}
+                <div className="pointer-events-none absolute inset-0 animate-shimmer" />
+                <span className="text-3xl opacity-30">📋</span>
+                <p className="text-sm font-medium text-neutral-600">Fill in your details</p>
+                <p className="text-xs text-neutral-700">then click Generate to preview</p>
               </div>
             )}
           </div>

@@ -10,6 +10,7 @@ type JobCard = {
   emoji: string;
   multiplier: string;
   multiplierColor: string;
+  borderColor: string;
   description: string;
   tasks: string[];
   shillScript: string;
@@ -23,6 +24,7 @@ const JOBS: JobCard[] = [
     emoji: "📣",
     multiplier: "2x",
     multiplierColor: "bg-blue-600",
+    borderColor: "border-l-blue-600",
     description: "Spread the $JOB gospel across all platforms.",
     tasks: [
       "Post 10+ times daily across X / CT",
@@ -39,6 +41,7 @@ const JOBS: JobCard[] = [
     emoji: "🎨",
     multiplier: "1.5x",
     multiplierColor: "bg-purple-600",
+    borderColor: "border-l-purple-600",
     description: "Create viral content that makes people feel seen.",
     tasks: [
       "Ship at least 3 original memes per day",
@@ -55,6 +58,7 @@ const JOBS: JobCard[] = [
     emoji: "⚡",
     multiplier: "3x",
     multiplierColor: "bg-yellow-500",
+    borderColor: "border-l-yellow-500",
     description: "Hold down the fort while the US sleeps.",
     tasks: [
       "Post during Asia/EU market hours",
@@ -71,6 +75,7 @@ const JOBS: JobCard[] = [
     emoji: "📋",
     multiplier: "1x",
     multiplierColor: "bg-neutral-600",
+    borderColor: "border-l-neutral-600",
     description: "Recruit new employees to the $JOB family.",
     tasks: [
       "DM 5 degens per day about $JOB",
@@ -87,6 +92,7 @@ const JOBS: JobCard[] = [
     emoji: "🗓️",
     multiplier: "1.5x",
     multiplierColor: "bg-teal-600",
+    borderColor: "border-l-teal-600",
     description: "Build and ship the $JOB roadmap narrative.",
     tasks: [
       "Create $JOB roadmap threads",
@@ -103,6 +109,7 @@ const JOBS: JobCard[] = [
     emoji: "👑",
     multiplier: "2x",
     multiplierColor: "bg-amber-600",
+    borderColor: "border-l-amber-600",
     description: "Executive-level posting with gravitas.",
     tasks: [
       "Write long-form $JOB thought leadership",
@@ -119,6 +126,7 @@ const JOBS: JobCard[] = [
     emoji: "💻",
     multiplier: "1.5x",
     multiplierColor: "bg-blue-500",
+    borderColor: "border-l-blue-500",
     description: "Build tools, bots, and integrations for $JOB.",
     tasks: [
       "Build $JOB tracking tools",
@@ -135,6 +143,7 @@ const JOBS: JobCard[] = [
     emoji: "🔥",
     multiplier: "UNFIREABLE",
     multiplierColor: "bg-red-600",
+    borderColor: "border-l-red-600",
     description: "You hold through everything. You ARE $JOB.",
     tasks: [
       "Never sell, no matter what",
@@ -201,7 +210,9 @@ function JobCardItem({
   const [showScript, setShowScript] = useState(false);
 
   return (
-    <div className="group flex flex-col rounded-2xl border border-neutral-800 bg-neutral-900/50 p-5 transition-all hover:border-neutral-600 hover:bg-neutral-900">
+    <div
+      className={`group flex flex-col rounded-2xl border border-neutral-800 border-l-4 ${job.borderColor} bg-neutral-900/50 p-5 transition-all duration-200 hover:border-neutral-600 hover:bg-neutral-900 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/50`}
+    >
       {/* Header */}
       <div className="mb-4 flex items-start justify-between gap-2">
         <div>
@@ -227,7 +238,7 @@ function JobCardItem({
       <ul className="mb-5 flex-1 space-y-1.5">
         {job.tasks.map((t, i) => (
           <li key={i} className="flex items-start gap-2 text-xs text-neutral-400">
-            <span className="mt-0.5 shrink-0 text-blue-500">▸</span>
+            <span className="mt-0.5 shrink-0 text-blue-400/70">→</span>
             <span>{t}</span>
           </li>
         ))}
@@ -241,28 +252,37 @@ function JobCardItem({
           onClick={() => setShowScript((v) => !v)}
           className="w-full rounded-lg border border-neutral-700 px-3 py-2 text-xs font-medium text-neutral-400 transition-colors hover:border-neutral-500 hover:text-white"
         >
-          {showScript ? "Hide script" : "Show shill script"}
+          {showScript ? "Hide script ↑" : "Show shill script ↓"}
         </button>
 
         {showScript && (
-          <div className="rounded-lg bg-neutral-950 p-3">
-            <p className="mb-2 text-xs leading-relaxed text-neutral-300">
+          <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-3">
+            {/* Terminal header */}
+            <div className="mb-2 flex items-center gap-1.5">
+              <span className="text-green-400 font-mono text-xs">$&gt;</span>
+              <span className="text-neutral-600 font-mono text-[10px] uppercase tracking-widest">shill_script.txt</span>
+            </div>
+            <p className="mb-3 text-xs leading-relaxed text-neutral-300 font-mono">
               {job.shillScript}
             </p>
             <button
               type="button"
               onClick={onCopy}
-              className="rounded bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
+              className={`rounded-md px-3 py-1.5 text-xs font-semibold text-white transition-all active:scale-95 ${
+                copied
+                  ? "bg-green-600 shadow-sm shadow-green-600/30"
+                  : "bg-blue-600 hover:bg-blue-500"
+              }`}
             >
-              {copied ? "Copied!" : "Copy"}
+              {copied ? "✓ Copied!" : "Copy"}
             </button>
           </div>
         )}
 
         {/* Clock in with this role */}
         <a
-          href={`#clock-in`}
-          className="block w-full rounded-lg bg-neutral-800 px-3 py-2 text-center text-xs font-medium text-neutral-300 transition-colors hover:bg-neutral-700 hover:text-white"
+          href="#clock-in"
+          className="block w-full rounded-lg border border-neutral-800 px-3 py-2 text-center text-xs font-medium text-neutral-400 transition-all hover:border-blue-500/50 hover:text-blue-400"
         >
           Clock in as {job.role} →
         </a>
