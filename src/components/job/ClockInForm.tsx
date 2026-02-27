@@ -80,7 +80,7 @@ export default function ClockInForm() {
 
       const content = cycleCount > 0 && totalSol
         ? `Just clocked into $JOB Corp. ${totalSol} distributed to holders across ${cycleCount} payout cycle${cycleCount !== 1 ? "s" : ""}. AI took your job — $JOB pays you back. 💰`
-        : `Just clocked into $JOB Corp. Paying holders every 5 minutes in SOL from creator fees. AI took your job — $JOB pays you back. 💰`;
+        : `Just clocked into $JOB Corp. Paying holders hourly in SOL from creator fees. AI took your job — $JOB pays you back. 💰`;
 
       const roleLabel = ROLES.find((r) => r.value === role)?.label ?? role;
       const result = await generateJobAlertCard({

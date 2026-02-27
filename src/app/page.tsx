@@ -66,7 +66,7 @@ export default function Home() {
 
           <p className="animate-fade-in-up delay-240 mx-auto max-w-xl text-base leading-relaxed text-neutral-400 sm:text-lg">
             Hold <span className="font-semibold text-white">$JOB</span>, earn
-            every 5 minutes from creator fee payroll. No resume. No interview. No boss.
+            hourly from creator fee payroll. No resume. No interview. No boss.
             Job description: shill, post, meme.
           </p>
 
@@ -229,7 +229,7 @@ export default function Home() {
 const FAQS = [
   {
     q: "How do I get paid?",
-    a: "95% of all $JOB creator fees are distributed to holders every 5 minutes. The remaining 5% goes to ReFi to fund the payroll infrastructure. The more $JOB you hold, the larger your share of the 95%. Payroll estimates are displayed in the strip above and are updated periodically. Payouts are not guaranteed — this is a memecoin.",
+    a: "95% of all $JOB creator fees are distributed to holders hourly. The remaining 5% goes to ReFi to fund the payroll infrastructure. The more $JOB you hold, the larger your share of the 95%. Payroll estimates are displayed in the strip above and are updated periodically. Payouts are not guaranteed — this is a memecoin.",
   },
   {
     q: "Do I need a resume?",

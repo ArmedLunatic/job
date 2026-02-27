@@ -9,7 +9,7 @@ export interface RefiTokenStats {
   total_distributed: number; // SOL, 0 when no cycles yet
   cycle_count: number;
   reward_mode: string; // e.g. "lottery"
-  interval_sec: number; // payout interval in seconds, e.g. 300 = 5 min
+  interval_sec: number; // payout interval in seconds, e.g. 3600 = 1 hour
 }
 
 export interface RefiCycle {
