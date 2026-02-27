@@ -1,5 +1,6 @@
 import ClockInForm from "@/components/job/ClockInForm";
 import JobBoard from "@/components/job/JobBoard";
+import ReFiStats from "@/components/job/ReFiStats";
 
 export default function Home() {
   return (
@@ -123,6 +124,9 @@ export default function Home() {
 
       {/* ── Job Board ─────────────────────────────────────────────────────────── */}
       <JobBoard />
+
+      {/* ── ReFi Live Payroll Stats ────────────────────────────────────────────── */}
+      <ReFiStats />
 
       {/* ── FAQ ───────────────────────────────────────────────────────────────── */}
       <FaqSection />

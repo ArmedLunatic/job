@@ -1,6 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import {
+  fetchAllRefiData,
+  fmtSol,
+  REFI_POLL_INTERVAL_MS,
+} from "@/lib/refi/client";
+import type { RefiData, RefiLoadState } from "@/lib/refi/types";
 
 function secondsToNextHour(): number {
   const now = new Date();
@@ -22,11 +28,69 @@ function fmt(secs: number): string {
 
 export default function PayrollStrip() {
   const [secs, setSecs] = useState(secondsToNextHour());
+  const [data, setData] = useState<RefiData | null>(null);
+  const [loadState, setLoadState] = useState<RefiLoadState>("idle");
 
+  // Countdown timer
   useEffect(() => {
     const id = setInterval(() => setSecs(secondsToNextHour()), 1000);
     return () => clearInterval(id);
   }, []);
+
+  // ReFi API polling
+  useEffect(() => {
+    let cancelled = false;
+
+    async function poll() {
+      if (loadState === "idle") setLoadState("loading");
+      try {
+        const result = await fetchAllRefiData();
+        if (!cancelled) {
+          setData(result);
+          setLoadState("success");
+        }
+      } catch {
+        if (!cancelled) setLoadState("error");
+      }
+    }
+
+    poll();
+    const id = setInterval(poll, REFI_POLL_INTERVAL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const isLoading = loadState === "idle" || loadState === "loading";
+  const isError = loadState === "error";
+
+  const lastCycleSol =
+    data?.cycles?.[0]?.sol_distributed != null
+      ? fmtSol(data.cycles[0].sol_distributed)
+      : isLoading
+      ? "..."
+      : "—";
+
+  const totalDistSol =
+    data?.stats?.total_distributed != null
+      ? fmtSol(data.stats.total_distributed)
+      : isLoading
+      ? "..."
+      : "—";
+
+  const cycleCount =
+    data?.stats?.cycle_count != null
+      ? `#${data.stats.cycle_count}`
+      : isLoading
+      ? "..."
+      : "—";
+
+  let disclaimer = "ESTIMATED · DATA PENDING";
+  if (loadState === "loading") disclaimer = "LOADING · REFI API";
+  else if (loadState === "success") disclaimer = "LIVE · REFI.GG";
+  else if (loadState === "error") disclaimer = "ESTIMATED · API ERR";
 
   return (
     <div
@@ -48,15 +112,19 @@ export default function PayrollStrip() {
           </div>
 
           {/* Ticker cells */}
-          <Ticker label="PAYROLL" value="$12,450/hr" color="text-green-400" />
-          <Ticker label="WAGE" value="$0.00042 / 1M $JOB" color="text-blue-400" />
+          <Ticker label="LAST CYCLE" value={lastCycleSol} color="text-green-400" />
+          <Ticker label="TOTAL DIST" value={totalDistSol} color="text-blue-400" />
+          <Ticker label="CYCLES" value={cycleCount} color="text-purple-400" />
           <Ticker label="NEXT PAYROLL" value={fmt(secs)} color="text-yellow-400" flash />
-          <Ticker label="VOL" value="—" color="text-neutral-500" />
         </div>
 
         {/* Right: disclaimer */}
-        <span className="hidden items-center border-l border-neutral-800 px-3 py-1.5 text-[10px] text-neutral-700 sm:flex whitespace-nowrap tracking-widest uppercase font-mono">
-          ESTIMATED · DATA PENDING
+        <span
+          className={`hidden items-center border-l border-neutral-800 px-3 py-1.5 text-[10px] sm:flex whitespace-nowrap tracking-widest uppercase font-mono ${
+            isError ? "text-red-500/70" : "text-neutral-700"
+          }`}
+        >
+          {disclaimer}
         </span>
       </div>
     </div>
