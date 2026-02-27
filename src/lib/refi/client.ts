@@ -24,7 +24,7 @@ async function refiGet<T>(path: string): Promise<T> {
 // Each fetcher maps the raw API shape → our clean internal type.
 // Raw shapes confirmed from live API 2026-02-27.
 
-// GET / → { token: { symbol, name, imageUrl, rewardMode, ... }, stats: { total_cycles, total_distributed, ... } }
+// GET / → { token: { symbol, name, imageUrl, rewardMode }, stats: { total_cycles, total_distributed (lamports), total_claimed (lamports) } }
 export async function fetchTokenStats(): Promise<RefiTokenStats> {
   const raw = await refiGet<{
     token: {
@@ -35,7 +35,8 @@ export async function fetchTokenStats(): Promise<RefiTokenStats> {
     };
     stats: {
       total_cycles: number | null;
-      total_distributed: string | null;
+      total_distributed: number | null; // lamports
+      total_claimed: number | null;     // lamports
     };
   }>("");
   return {
@@ -43,32 +44,28 @@ export async function fetchTokenStats(): Promise<RefiTokenStats> {
     name: raw.token.name,
     image: raw.token.imageUrl,
     total_distributed: raw.stats.total_distributed != null
-      ? parseFloat(raw.stats.total_distributed)
+      ? raw.stats.total_distributed / 1e9  // lamports → SOL
       : 0,
     cycle_count: raw.stats.total_cycles ?? 0,
     reward_mode: raw.token.rewardMode,
   };
 }
 
-// GET /cycles → { cycles: Array<{ sol_claimed, sol_distributed, holders_paid, timestamp }> }
+// GET /cycles → { cycles: Array<{ ranAt, claimedSol (string), distributedSol (string), holdersPaid }> }
 export async function fetchCycles(limit = 10): Promise<RefiCycle[]> {
   const raw = await refiGet<{
     cycles: Array<{
-      sol_claimed?: number;
-      sol_distributed?: number;
-      holders_paid?: number;
-      timestamp?: string;
-      // camelCase fallbacks in case API uses those
-      solClaimed?: number;
-      solDistributed?: number;
+      ranAt?: string;
+      claimedSol?: string;
+      distributedSol?: string;
       holdersPaid?: number;
     }>;
   }>(`/cycles?limit=${limit}`);
   return (raw.cycles ?? []).map((c) => ({
-    sol_claimed: c.sol_claimed ?? c.solClaimed ?? 0,
-    sol_distributed: c.sol_distributed ?? c.solDistributed ?? 0,
-    holders_paid: c.holders_paid ?? c.holdersPaid ?? 0,
-    timestamp: c.timestamp ?? "",
+    sol_claimed: parseFloat(c.claimedSol ?? "0") || 0,
+    sol_distributed: parseFloat(c.distributedSol ?? "0") || 0,
+    holders_paid: c.holdersPaid ?? 0,
+    timestamp: c.ranAt ?? "",
   }));
 }
 
