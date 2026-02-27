@@ -4,7 +4,7 @@ import ReFiStats from "@/components/job/ReFiStats";
 
 // ─── External links ───────────────────────────────────────────────────────────
 const RUNNR_BUY_URL =
-  "https://runnr.trade/token/QQ2FpXD65ni9nrxpkEJFG4RMstzCKGMUp1Lqwzipump?ref=ash";
+  "https://runnr.trade/token/12yc14qer8X8kb3mn5S6LDZy4oKwe2uVdME4LJ2qpump?ref=ash";
 // Update X_COMMUNITY_URL once your X community is live
 const X_COMMUNITY_URL = "https://x.com/search?q=%24JOB&src=typed_query&f=live";
 

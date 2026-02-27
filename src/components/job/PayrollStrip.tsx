@@ -128,7 +128,7 @@ export default function PayrollStrip() {
             {disclaimer}
           </span>
           <a
-            href="https://runnr.trade/token/QQ2FpXD65ni9nrxpkEJFG4RMstzCKGMUp1Lqwzipump?ref=ash"
+            href="https://runnr.trade/token/12yc14qer8X8kb3mn5S6LDZy4oKwe2uVdME4LJ2qpump?ref=ash"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center border-l border-neutral-800 px-3 py-1.5 font-mono text-[10px] tracking-widest uppercase text-green-500/60 whitespace-nowrap transition-colors hover:text-green-400"

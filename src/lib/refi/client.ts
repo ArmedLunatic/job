@@ -9,7 +9,7 @@ import type {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 export const REFI_BASE_URL = "https://refi.gg/api/public/tokens";
-export const REFI_CA = "QQ2FpXD65ni9nrxpkEJFG4RMstzCKGMUp1Lqwzipump";
+export const REFI_CA = "12yc14qer8X8kb3mn5S6LDZy4oKwe2uVdME4LJ2qpump";
 export const REFI_POLL_INTERVAL_MS = 30_000;
 
 // ─── Internal fetch ───────────────────────────────────────────────────────────
