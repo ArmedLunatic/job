@@ -8,6 +8,7 @@ import {
   generateBadgePfp,
   type ImageGenResult,
 } from "@/lib/job/image-gen";
+import { fetchAllRefiData, fmtSol } from "@/lib/refi/client";
 import JobAlertPreview from "@/components/job/JobAlertPreview";
 import BadgePreview from "@/components/job/BadgePreview";
 import PublishPanel from "@/components/job/PublishPanel";
@@ -68,6 +69,19 @@ export default function ClockInForm() {
     setGenError(null);
     if (alertResult) URL.revokeObjectURL(alertResult.url);
     try {
+      // Fetch live ReFi stats to populate card numbers + content
+      const refi = await fetchAllRefiData().catch(() => null);
+      const stats = refi?.stats;
+      const lastCycle = refi?.cycles?.[0];
+
+      const cycleCount = stats?.cycle_count ?? 0;
+      const holdersPaid = lastCycle?.holders_paid ?? 0;
+      const totalSol = stats?.total_distributed ? fmtSol(stats.total_distributed) : null;
+
+      const content = cycleCount > 0 && totalSol
+        ? `Just clocked into $JOB Corp. ${totalSol} distributed to holders across ${cycleCount} payout cycle${cycleCount !== 1 ? "s" : ""}. AI took your job — $JOB pays you back. 💰`
+        : `Just clocked into $JOB Corp. Paying holders hourly in SOL from creator fees. AI took your job — $JOB pays you back. 💰`;
+
       const roleLabel = ROLES.find((r) => r.value === role)?.label ?? role;
       const result = await generateJobAlertCard({
         username,
@@ -79,9 +93,9 @@ export default function ClockInForm() {
         statusBanner: "started a new position",
         position: "Full-Time Holder",
         companyLine: "$JOB on Solana",
-        content: `Just clocked into $JOB Corp. Paying holders hourly in SOL from creator fees. AI took your job — $JOB pays you back. 💰`,
-        likes: 0,
-        comments: 0,
+        content,
+        likes: holdersPaid,
+        comments: cycleCount,
         shares: 0,
       });
       setAlertResult(result);
