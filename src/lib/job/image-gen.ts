@@ -330,7 +330,7 @@ export async function generateJobAlertCard(
 
   // ── Section 4: Content text ───────────────────────────────────────────────────
   const content = opts.content ??
-    `Just clocked into $JOB Corp. Paying holders hourly in SOL from creator fees. AI took your job — $JOB pays you back. 💰`;
+    `Just clocked into $JOB Corp. Paying holders every 5 minutes in SOL from creator fees. AI took your job — $JOB pays you back. 💰`;
   ctx.font = `400 19px ${FONT}`;
   ctx.fillStyle = "#111827";
   ctx.textBaseline = "top";

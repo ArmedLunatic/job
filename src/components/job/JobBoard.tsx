@@ -29,7 +29,7 @@ const JOBS: JobCard[] = [
       "Translate $JOB narrative to your community",
     ],
     shillScript:
-      "BREAKING: AI just automated 50% of white-collar jobs. Good news: $JOB is HIRING. Hold $JOB, earn hourly from creator fee payroll. No resume. No interview. Just vibe. 👔 $JOB",
+      "BREAKING: AI just automated 50% of white-collar jobs. Good news: $JOB is HIRING. Hold $JOB, earn every 5 minutes from creator fee payroll. No resume. No interview. Just vibe. 👔 $JOB",
   },
   {
     id: 2,
@@ -59,7 +59,7 @@ const JOBS: JobCard[] = [
       "Never let the timeline breathe",
     ],
     shillScript:
-      "did u know u can get paid just for posting about $JOB. like actually paid. hourly. i just post all day. this is my job now. i love my job. $JOB",
+      "did u know u can get paid just for posting about $JOB. like actually paid. every 5 mins. i just post all day. this is my job now. i love my job. $JOB",
   },
   {
     id: 4,
@@ -74,7 +74,7 @@ const JOBS: JobCard[] = [
       "Help onboard new $JOB holders",
     ],
     shillScript:
-      "We are hiring at $JOB. Requirements: wallet. Salary: hourly payroll. Benefits: vibes + gains. No experience necessary. Apply by buying $JOB.",
+      "We are hiring at $JOB. Requirements: wallet. Salary: payroll every 5 mins. Benefits: vibes + gains. No experience necessary. Apply by buying $JOB.",
   },
   {
     id: 5,
@@ -89,7 +89,7 @@ const JOBS: JobCard[] = [
       "Be the vibe when the chart isn't",
     ],
     shillScript:
-      "there's a token called $JOB where literally everyone is an employee. the community goes hard. holding pays hourly. if u don't have a job yet what r u doing $JOB",
+      "there's a token called $JOB where literally everyone is an employee. the community goes hard. holding pays every 5 mins. if u don't have a job yet what r u doing $JOB",
   },
   {
     id: 6,
@@ -119,7 +119,7 @@ const JOBS: JobCard[] = [
       "Help improve the $JOB site (PRs welcome)",
     ],
     shillScript:
-      "just deployed a bot that monitors $JOB payroll and tweets every hour. unemployed by ChatGPT, rehired by $JOB. the irony is not lost on me.",
+      "just deployed a bot that monitors $JOB payroll and tweets every 5 mins. unemployed by ChatGPT, rehired by $JOB. the irony is not lost on me.",
   },
   {
     id: 8,

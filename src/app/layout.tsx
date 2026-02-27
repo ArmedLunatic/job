@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "$JOB — AI Took Your Job. We're Hiring.",
   description:
-    "AI took your job. Good news: $JOB is hiring. Hold $JOB, get paid hourly from creator fee payroll. No resume, no boss, no office.",
+    "AI took your job. Good news: $JOB is hiring. Hold $JOB, get paid every 5 minutes from creator fee payroll. No resume, no boss, no office.",
   openGraph: {
     title: "$JOB — AI Took Your Job. We're Hiring.",
     description:
-      "Hold $JOB, earn hourly. Generate your Job Alert Card and Badge PFP. Clock in now.",
+      "Hold $JOB, earn every 5 minutes. Generate your Job Alert Card and Badge PFP. Clock in now.",
     type: "website",
     images: [{ url: "/job/job-icon.png", width: 512, height: 512, alt: "$JOB" }],
   },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "$JOB — AI Took Your Job. We're Hiring.",
     description:
-      "Hold $JOB, earn hourly. Generate your Job Alert Card and Badge PFP. Clock in now.",
+      "Hold $JOB, earn every 5 minutes. Generate your Job Alert Card and Badge PFP. Clock in now.",
     images: ["/job/job-icon.png"],
   },
 };
