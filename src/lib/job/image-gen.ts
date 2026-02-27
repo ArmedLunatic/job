@@ -8,11 +8,16 @@ export type ImageGenOpts = {
   role: string;
   stamp: Stamp;
   avatarSource: AvatarSource;
-  // Job Alert Card copy — defaults to $JOB-themed strings
-  alertLabel?: string;   // header right of logo, e.g. "Paid hourly"
-  jobTitle?: string;     // subtitle under username, e.g. "Full-Time Holder at $JOB"
-  primaryBtn?: string;   // filled blue button, e.g. "Buy $JOB"
-  secondaryBtn?: string; // outlined button, e.g. "Congrats 💙"
+  // LinkedIn-style card copy
+  roleLine?: string;      // e.g. "Chief Shill Officer · $JOB Corp"
+  timestamp?: string;     // e.g. "just now · 🌐"
+  statusBanner?: string;  // e.g. "started a new position"
+  position?: string;      // e.g. "Full-Time Holder"
+  companyLine?: string;   // e.g. "$JOB on Solana"
+  content?: string;       // post body text
+  likes?: number;
+  comments?: number;
+  shares?: number;
 };
 
 export type ImageGenResult = { blob: Blob; url: string };
@@ -143,6 +148,59 @@ function pill(
   ctx.closePath();
 }
 
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number
+): void {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number,
+  maxLines: number
+): void {
+  const words = text.split(" ");
+  let line = "";
+  let lineCount = 0;
+  for (const word of words) {
+    const testLine = line ? line + " " + word : word;
+    if (ctx.measureText(testLine).width > maxWidth && line) {
+      ctx.fillText(line, x, y + lineCount * lineHeight);
+      lineCount++;
+      if (lineCount >= maxLines) {
+        let trunc = word;
+        while (ctx.measureText(trunc + "…").width > maxWidth && trunc.length > 0)
+          trunc = trunc.slice(0, -1);
+        ctx.fillText(trunc + "…", x, y + lineCount * lineHeight);
+        return;
+      }
+      line = word;
+    } else {
+      line = testLine;
+    }
+  }
+  if (line && lineCount < maxLines) ctx.fillText(line, x, y + lineCount * lineHeight);
+}
+
 // ─── Job Alert Card — 1200 × 675 ─────────────────────────────────────────────
 
 export async function generateJobAlertCard(
@@ -152,7 +210,7 @@ export async function generateJobAlertCard(
 
   const W = 1200;
   const H = 675;
-  const HEADER_H = 84;
+  const PAD = 52;
   const FONT = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 
   const [avatar, icon] = await Promise.all([
@@ -166,115 +224,164 @@ export async function generateJobAlertCard(
   const ctx = canvas.getContext("2d")!;
   if (!ctx) throw new Error("Could not get 2D context.");
 
-  // ── White base ──────────────────────────────────────────────────────────────
+  // ── White base ───────────────────────────────────────────────────────────────
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(0, 0, W, H);
 
-  // ── Header strip ────────────────────────────────────────────────────────────
-  ctx.fillStyle = "#F3F4F6";
-  ctx.fillRect(0, 0, W, HEADER_H);
-
-  // Icon in header
-  let headerTextX = 28;
-  if (icon) {
-    const iconSize = 44;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(28 + iconSize / 2, HEADER_H / 2, iconSize / 2, 0, Math.PI * 2);
-    ctx.clip();
-    ctx.drawImage(icon, 28, (HEADER_H - iconSize) / 2, iconSize, iconSize);
-    ctx.restore();
-    headerTextX = 28 + iconSize + 12;
-  }
-
-  ctx.font = `bold 16px ${FONT}`;
-  ctx.fillStyle = "#374151";
-  ctx.textBaseline = "middle";
-  ctx.fillText("$JOB", headerTextX, HEADER_H / 2);
-
-  ctx.fillStyle = "#D1D5DB";
-  ctx.fillRect(headerTextX + 48, HEADER_H / 2 - 10, 1, 20);
-
-  ctx.font = `500 15px ${FONT}`;
-  ctx.fillStyle = "#6B7280";
-  ctx.fillText(opts.alertLabel ?? "Paid hourly", headerTextX + 60, HEADER_H / 2);
-
-  // ── Avatar ──────────────────────────────────────────────────────────────────
-  const AV_R = 72;
-  const AV_CX = 72 + 56; // 56px left margin
-  const AV_CY = HEADER_H + 80 + AV_R; // 80px top margin below header
-
-  drawCircleAvatar(ctx, avatar, AV_CX, AV_CY, AV_R);
-
-  // ── Text block ──────────────────────────────────────────────────────────────
-  const TX = AV_CX + AV_R + 32;
-
-  // @username
-  ctx.font = `bold 34px ${FONT}`;
-  ctx.fillStyle = "#111827";
-  ctx.textBaseline = "top";
   const displayName = opts.username.trim().startsWith("@")
     ? opts.username.trim()
     : `@${opts.username.trim()}`;
-  ctx.fillText(displayName, TX, AV_CY - AV_R + 4);
 
-  // Subtitle
-  ctx.font = `400 22px ${FONT}`;
+  // ── Section 1: Header — avatar + name block + Follow button ─────────────────
+  const AV_R = 44;
+  const AV_CX = PAD + AV_R;
+  const AV_CY = 36 + AV_R;
+  drawCircleAvatar(ctx, avatar, AV_CX, AV_CY, AV_R, "#E5E7EB", 3);
+
+  const TX = AV_CX + AV_R + 20;
+
+  ctx.font = `bold 26px ${FONT}`;
+  ctx.fillStyle = "#111827";
+  ctx.textBaseline = "top";
+  ctx.textAlign = "left";
+  ctx.fillText(displayName, TX, 40);
+
+  const roleLine = opts.roleLine ?? `${opts.role.charAt(0).toUpperCase() + opts.role.slice(1)} · $JOB Corp`;
+  ctx.font = `400 17px ${FONT}`;
   ctx.fillStyle = "#6B7280";
-  ctx.fillText(opts.jobTitle ?? "Full-Time Holder at $JOB", TX, AV_CY - AV_R + 48);
+  ctx.fillText(roleLine, TX, 74);
 
-  // Role pill
-  const PILL_LABEL =
-    opts.role.charAt(0).toUpperCase() + opts.role.slice(1);
-  ctx.font = `600 15px ${FONT}`;
-  const labelW = ctx.measureText(PILL_LABEL).width;
-  const PW = labelW + 28;
-  const PH = 32;
-  const PX = TX;
-  const PY = AV_CY - AV_R + 88;
+  const timestamp = opts.timestamp ?? "just now · 🌐";
+  ctx.font = `400 13px ${FONT}`;
+  ctx.fillStyle = "#9CA3AF";
+  ctx.fillText(timestamp, TX, 100);
 
-  ctx.fillStyle = "#EFF6FF";
-  pill(ctx, PX, PY, PW, PH, 16);
-  ctx.fill();
+  // Follow button (outlined, top-right)
+  const FOLLOW_W = 116;
+  const FOLLOW_H = 36;
+  const FOLLOW_X = W - PAD - FOLLOW_W;
+  const FOLLOW_Y = 58;
 
-  ctx.fillStyle = "#2563EB";
-  ctx.textBaseline = "middle";
-  ctx.fillText(PILL_LABEL, PX + 14, PY + PH / 2);
-
-  // ── Bottom buttons (visual) ──────────────────────────────────────────────────
-  const BTN_CY = H - 68;
-  const BTN_H = 46;
-  const RIGHT_EDGE = W - 60;
-
-  // "Send a message" (filled blue)
-  const MSG = opts.primaryBtn ?? "Buy $JOB";
-  ctx.font = `600 17px ${FONT}`;
-  const mW = ctx.measureText(MSG).width + 40;
-  const MX = RIGHT_EDGE - mW;
-
-  ctx.fillStyle = "#2563EB";
-  pill(ctx, MX, BTN_CY - BTN_H / 2, mW, BTN_H, BTN_H / 2);
-  ctx.fill();
-  ctx.fillStyle = "#FFFFFF";
-  ctx.textBaseline = "middle";
-  ctx.fillText(MSG, MX + 20, BTN_CY);
-
-  // "Congrats 💙" (outlined)
-  const CG = opts.secondaryBtn ?? "Congrats 💙";
-  ctx.font = `600 17px ${FONT}`;
-  const cW = ctx.measureText(CG).width + 40;
-  const CX = MX - cW - 12;
-
-  ctx.strokeStyle = "#D1D5DB";
+  ctx.strokeStyle = "#2563EB";
   ctx.lineWidth = 2;
-  pill(ctx, CX, BTN_CY - BTN_H / 2, cW, BTN_H, BTN_H / 2);
+  pill(ctx, FOLLOW_X, FOLLOW_Y, FOLLOW_W, FOLLOW_H, FOLLOW_H / 2);
   ctx.stroke();
-  ctx.fillStyle = "#374151";
-  ctx.fillText(CG, CX + 20, BTN_CY);
+  ctx.font = `600 15px ${FONT}`;
+  ctx.fillStyle = "#2563EB";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
+  ctx.fillText("+ Follow", FOLLOW_X + FOLLOW_W / 2, FOLLOW_Y + FOLLOW_H / 2);
 
-  // ── Subtle bottom border ────────────────────────────────────────────────────
-  ctx.fillStyle = "#F9FAFB";
-  ctx.fillRect(0, H - 1, W, 1);
+  // ··· more dots
+  ctx.font = `bold 22px ${FONT}`;
+  ctx.fillStyle = "#9CA3AF";
+  ctx.textAlign = "right";
+  ctx.fillText("···", FOLLOW_X - 20, FOLLOW_Y + FOLLOW_H / 2);
+
+  // ── Section 2: Status banner ─────────────────────────────────────────────────
+  const BANNER_Y = 144;
+  const BANNER_H = 60;
+  ctx.fillStyle = "#EBF3FB";
+  ctx.fillRect(0, BANNER_Y, W, BANNER_H);
+
+  const statusBanner = opts.statusBanner ?? "started a new position";
+  ctx.font = `500 18px ${FONT}`;
+  ctx.fillStyle = "#374151";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "left";
+  ctx.fillText(`🎉  ${displayName} ${statusBanner}`, PAD, BANNER_Y + BANNER_H / 2);
+
+  // ── Section 3: Position box ───────────────────────────────────────────────────
+  const BOX_Y = 220;
+  const BOX_H = 112;
+  ctx.fillStyle = "#F3F4F6";
+  roundRect(ctx, PAD, BOX_Y, W - PAD * 2, BOX_H, 8);
+  ctx.fill();
+
+  // Company logo inside box
+  const LOGO_R = 34;
+  const LOGO_CX = PAD + 20 + LOGO_R;
+  const LOGO_CY = BOX_Y + BOX_H / 2;
+  if (icon) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(LOGO_CX, LOGO_CY, LOGO_R, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(icon, LOGO_CX - LOGO_R, LOGO_CY - LOGO_R, LOGO_R * 2, LOGO_R * 2);
+    ctx.restore();
+  }
+
+  const POS_TX = LOGO_CX + LOGO_R + 18;
+  const position = opts.position ?? "Full-Time Holder";
+  ctx.font = `bold 22px ${FONT}`;
+  ctx.fillStyle = "#111827";
+  ctx.textBaseline = "top";
+  ctx.textAlign = "left";
+  ctx.fillText(position, POS_TX, BOX_Y + 20);
+
+  const companyLine = opts.companyLine ?? "$JOB on Solana";
+  ctx.font = `400 16px ${FONT}`;
+  ctx.fillStyle = "#6B7280";
+  ctx.fillText(companyLine, POS_TX, BOX_Y + 50);
+
+  ctx.font = `400 13px ${FONT}`;
+  ctx.fillStyle = "#9CA3AF";
+  ctx.fillText("Full-time · Just started", POS_TX, BOX_Y + 76);
+
+  // ── Section 4: Content text ───────────────────────────────────────────────────
+  const content = opts.content ??
+    `Just clocked into $JOB Corp. Paying holders hourly in SOL from creator fees. AI took your job — $JOB pays you back. 💰`;
+  ctx.font = `400 19px ${FONT}`;
+  ctx.fillStyle = "#111827";
+  ctx.textBaseline = "top";
+  ctx.textAlign = "left";
+  wrapText(ctx, content, PAD, 350, W - PAD * 2, 34, 3);
+
+  // ── Section 5: Engagement counts ─────────────────────────────────────────────
+  const likes = opts.likes ?? 0;
+  const comments = opts.comments ?? 0;
+  const shares = opts.shares ?? 0;
+
+  ctx.font = `400 13px ${FONT}`;
+  ctx.fillStyle = "#6B7280";
+  ctx.textBaseline = "top";
+  const engParts = [
+    likes > 0 ? `👍 ${likes}` : "👍 Be first to react",
+    `💬 ${comments} comments`,
+    `↗ ${shares} shares`,
+  ];
+  ctx.fillText(engParts.join("   ·   "), PAD, 466);
+
+  // Divider
+  ctx.fillStyle = "#E5E7EB";
+  ctx.fillRect(PAD, 500, W - PAD * 2, 1);
+
+  // ── Section 6: Action bar ─────────────────────────────────────────────────────
+  const ACTIONS = [
+    { label: "Like", icon: "👍" },
+    { label: "Comment", icon: "💬" },
+    { label: "Repost", icon: "🔄" },
+    { label: "Send", icon: "✉" },
+  ];
+  const ACT_Y = 514;
+  const ACT_H = 52;
+  const ACT_SLOT = (W - PAD * 2) / ACTIONS.length;
+
+  ACTIONS.forEach((action, i) => {
+    const ax = PAD + i * ACT_SLOT + ACT_SLOT / 2;
+    ctx.font = `600 15px ${FONT}`;
+    ctx.fillStyle = "#6B7280";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillText(`${action.icon}  ${action.label}`, ax, ACT_Y + ACT_H / 2);
+  });
+
+  // ── Watermark ─────────────────────────────────────────────────────────────────
+  ctx.font = `400 12px ${FONT}`;
+  ctx.fillStyle = "rgba(0,0,0,0.18)";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "bottom";
+  ctx.fillText("$JOB · refi.gg", W - PAD, H - 12);
 
   const blob = await canvasToBlob(canvas);
   return { blob, url: URL.createObjectURL(blob) };

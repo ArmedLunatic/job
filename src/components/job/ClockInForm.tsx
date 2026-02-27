@@ -68,15 +68,21 @@ export default function ClockInForm() {
     setGenError(null);
     if (alertResult) URL.revokeObjectURL(alertResult.url);
     try {
+      const roleLabel = ROLES.find((r) => r.value === role)?.label ?? role;
       const result = await generateJobAlertCard({
         username,
         role,
         stamp,
         avatarSource,
-        alertLabel: "Paid hourly",
-        jobTitle: "Full-Time Holder at $JOB",
-        primaryBtn: "Buy $JOB",
-        secondaryBtn: "Congrats 💙",
+        roleLine: `${roleLabel} · $JOB Corp`,
+        timestamp: "just now · 🌐",
+        statusBanner: "started a new position",
+        position: "Full-Time Holder",
+        companyLine: "$JOB on Solana",
+        content: `Just clocked into $JOB Corp. Paying holders hourly in SOL from creator fees. AI took your job — $JOB pays you back. 💰`,
+        likes: 0,
+        comments: 0,
+        shares: 0,
       });
       setAlertResult(result);
     } catch (e) {
