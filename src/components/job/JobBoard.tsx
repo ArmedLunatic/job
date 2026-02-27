@@ -218,7 +218,7 @@ function JobCardItem({
 
   return (
     <div
-      className={`group flex flex-col rounded border border-neutral-800 border-l-4 ${job.borderColor} bg-neutral-900/50 transition-all duration-200 hover:border-neutral-600 hover:bg-neutral-900`}
+      className={`group flex flex-col rounded border border-neutral-800 border-l-4 ${job.borderColor} bg-neutral-900/50 transition-all duration-200 hover:border-neutral-600 hover:bg-neutral-900 hover:shadow-lg hover:shadow-neutral-900/60`}
     >
       {/* Card header bar */}
       <div className="flex items-center justify-between border-b border-neutral-800 bg-neutral-900 px-4 py-2">
@@ -275,7 +275,7 @@ function JobCardItem({
             {showScript ? "▴ HIDE" : "▾ VIEW TALKING POINTS"}
           </button>
 
-          {showScript && (
+          <div className={`overflow-hidden transition-all duration-200 ${showScript ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
             <div className="rounded border border-neutral-800 bg-neutral-950 p-3">
               {/* Terminal header */}
               <div className="mb-2 flex items-center gap-1.5">
@@ -292,14 +292,14 @@ function JobCardItem({
                 onClick={onCopy}
                 className={`rounded px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-white transition-all active:scale-95 ${
                   copied
-                    ? "bg-green-600 shadow-sm shadow-green-600/30"
+                    ? "animate-scale-pop bg-green-600 shadow-sm shadow-green-600/30"
                     : "bg-blue-600 hover:bg-blue-500"
                 }`}
               >
                 {copied ? "✓ COPIED" : "COPY TO CLIPBOARD"}
               </button>
             </div>
-          )}
+          </div>
 
           {/* Clock in with this role */}
           <a

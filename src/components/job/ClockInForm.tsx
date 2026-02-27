@@ -182,7 +182,7 @@ export default function ClockInForm() {
                   <label className="block text-xs font-semibold uppercase tracking-widest text-neutral-500">
                     Classification:
                   </label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {STAMPS.map((s) => (
                       <button
                         key={s.value}

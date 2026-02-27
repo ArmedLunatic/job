@@ -6,7 +6,7 @@
   --foreground: #f8fafc;
 
   /* Glow radii */
-  --glow-blue:  rgba(59, 130, 246, 0.15);
+  --glow-blue:  rgba(59, 130, 246, 0.22);
   --glow-amber: rgba(245, 158, 11, 0.06);
 
   /* Grid */
@@ -92,6 +92,34 @@ button, a, summary, [role="button"] {
   97%  { clip-path: inset(30% 0 55% 0); transform: translateX(-2px); }
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scalePop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
 @keyframes floatY {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-6px); }
@@ -115,7 +143,7 @@ button, a, summary, [role="button"] {
     transparent 100%
   );
   background-size: 200% 100%;
-  animation: shimmer 2.4s ease-in-out infinite;
+  animation: shimmer 1.8s ease-in-out infinite;
 }
 
 .animate-live-blip {
@@ -148,6 +176,33 @@ button, a, summary, [role="button"] {
   animation: borderGlow 2.5s ease-in-out infinite;
 }
 
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-scale-pop {
+  animation: scalePop 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── FAQ slide transition ──────────────────────────────────────────────────── */
+details .faq-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+details[open] .faq-content {
+  grid-template-rows: 1fr;
+}
+
+details .faq-content > div {
+  overflow: hidden;
+}
+
 /* ─── Portal utility classes ────────────────────────────────────────────────── */
 
 /* Hard-bordered panel with surface bg */
@@ -171,7 +226,7 @@ button, a, summary, [role="button"] {
 
 /* Numbered section divider inside form */
 .form-step {
-  border-left: 2px solid #404040;
+  border-left: 2px solid #555555;
   padding-left: 0.75rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;

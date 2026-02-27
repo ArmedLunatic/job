@@ -43,7 +43,7 @@ export default function Modal({ open, onClose, title, children }: Props) {
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
       {/* Panel — slides up from bottom on mobile, centred on sm+ */}
-      <div className="relative z-10 flex w-full flex-col max-w-2xl rounded-t-2xl border border-neutral-800 bg-neutral-950 shadow-2xl sm:rounded-2xl" style={{ maxHeight: "90dvh" }}>
+      <div className="animate-slide-up relative z-10 flex w-full flex-col max-w-2xl rounded-t-2xl border border-neutral-800 bg-neutral-950 shadow-2xl sm:rounded-2xl" style={{ maxHeight: "90dvh" }}>
         {title && (
           <div className="flex shrink-0 items-center justify-between border-b border-neutral-800 px-5 py-4 sm:px-6">
             <h2 className="text-sm font-semibold text-white">{title}</h2>

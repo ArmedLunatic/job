@@ -55,7 +55,7 @@ export default function Home() {
           <h1
             className="animate-fade-in-up delay-80 text-5xl font-black leading-[1.05] tracking-tight text-white sm:text-7xl lg:text-8xl"
           >
-            <span className="inline-block">AI TOOK</span>
+            <span className="inline-block animate-glitch">AI TOOK</span>
             <br />
             <span className="text-blue-400">YOUR JOB.</span>
           </h1>
@@ -291,8 +291,12 @@ function FaqItem({ q, a, index }: { q: string; a: string; index: number }) {
           <span className="hidden group-open:inline">×</span>
         </span>
       </summary>
-      <div className="border-t border-neutral-800/60 pt-3 pb-5">
-        <p className="text-sm leading-relaxed text-neutral-400">{a}</p>
+      <div className="faq-content">
+        <div>
+          <div className="border-t border-neutral-800/60 pt-3 pb-5">
+            <p className="text-sm leading-relaxed text-neutral-400">{a}</p>
+          </div>
+        </div>
       </div>
     </details>
   );

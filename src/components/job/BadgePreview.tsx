@@ -35,7 +35,7 @@ export default function BadgePreview({ result }: Props) {
       <button
         type="button"
         onClick={download}
-        className="flex w-full items-center justify-center gap-2 rounded border border-neutral-700 px-4 py-2.5 font-mono text-xs uppercase tracking-widest text-neutral-300 transition-colors hover:border-neutral-500 hover:text-white"
+        className="flex w-full items-center justify-center gap-2 rounded border border-neutral-700 bg-neutral-900 px-4 py-2.5 font-mono text-xs uppercase tracking-widest text-neutral-300 transition-all hover:border-neutral-500 hover:bg-neutral-800 hover:text-white active:scale-95"
       >
         ↓ Download PNG
       </button>
