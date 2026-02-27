@@ -48,6 +48,7 @@ export async function fetchTokenStats(): Promise<RefiTokenStats> {
       : 0,
     cycle_count: raw.stats.total_cycles ?? 0,
     reward_mode: raw.token.rewardMode,
+    interval_sec: (raw as unknown as { rewards?: { intervalSec?: number } }).rewards?.intervalSec ?? 3600,
   };
 }
 
@@ -102,6 +103,7 @@ export async function fetchAllRefiData(): Promise<RefiData> {
         : 0,
       cycle_count: s.stats.total_cycles ?? 0,
       reward_mode: s.token.rewardMode,
+      interval_sec: s.rewards?.intervalSec ?? 3600,
     };
   }
 

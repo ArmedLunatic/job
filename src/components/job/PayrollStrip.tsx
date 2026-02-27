@@ -8,22 +8,17 @@ import {
 } from "@/lib/refi/client";
 import type { RefiData, RefiLoadState } from "@/lib/refi/types";
 
-const PAYOUT_INTERVAL_MS = 3600 * 1000; // ReFi runs every 1 hour
-
-function secondsToNextPayout(lastCycleTimestamp?: string): number {
+function secondsToNextPayout(lastCycleTimestamp?: string, intervalSec = 3600): number {
   const now = Date.now();
   if (lastCycleTimestamp) {
     const lastRun = new Date(lastCycleTimestamp).getTime();
     if (!isNaN(lastRun)) {
-      const next = lastRun + PAYOUT_INTERVAL_MS;
+      const next = lastRun + intervalSec * 1000;
       return Math.max(0, Math.floor((next - now) / 1000));
     }
   }
-  // Fallback before data loads: next top of hour
-  const nowDate = new Date(now);
-  const next = new Date(nowDate);
-  next.setHours(nowDate.getHours() + 1, 0, 0, 0);
-  return Math.max(0, Math.floor((next.getTime() - now) / 1000));
+  // Fallback before data loads: next interval boundary from now
+  return intervalSec;
 }
 
 function fmt(secs: number): string {
@@ -42,20 +37,23 @@ export default function PayrollStrip() {
   const [data, setData] = useState<RefiData | null>(null);
   const [loadState, setLoadState] = useState<RefiLoadState>("idle");
 
-  // Keep a ref to the latest cycle timestamp so the interval always has fresh data
+  // Refs so the interval callback always reads the latest values without re-registering
   const lastCycleTsRef = useRef<string | undefined>(undefined);
+  const intervalSecRef = useRef<number>(3600);
 
-  // Sync ref + re-initialise countdown whenever cycle data arrives
+  // Sync refs + re-initialise countdown whenever data arrives
   useEffect(() => {
     const ts = data?.cycles?.[0]?.timestamp;
+    const sec = data?.stats?.interval_sec ?? 3600;
     lastCycleTsRef.current = ts;
-    setSecs(secondsToNextPayout(ts));
+    intervalSecRef.current = sec;
+    setSecs(secondsToNextPayout(ts, sec));
   }, [data]);
 
-  // Countdown timer — ticks every second using the ref value
+  // Countdown timer — ticks every second using the latest refs
   useEffect(() => {
     const id = setInterval(
-      () => setSecs(secondsToNextPayout(lastCycleTsRef.current)),
+      () => setSecs(secondsToNextPayout(lastCycleTsRef.current, intervalSecRef.current)),
       1000
     );
     return () => clearInterval(id);
