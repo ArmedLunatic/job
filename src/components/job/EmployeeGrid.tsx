@@ -120,8 +120,19 @@ export default function EmployeeGrid() {
 
       {/* States */}
       {loading && (
-        <div className="flex h-40 items-center justify-center font-mono text-xs uppercase tracking-widest text-neutral-600">
-          LOADING RECORDS…
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {[...Array(10)].map((_, i) => (
+            <div
+              key={i}
+              className="flex flex-col items-center gap-3 rounded border border-neutral-800 bg-neutral-900/50 p-4"
+            >
+              <div className="h-24 w-24 rounded-full border-2 border-neutral-800 bg-neutral-800 animate-shimmer" />
+              <div className="w-full space-y-2">
+                <div className="mx-auto h-3 w-20 rounded bg-neutral-800 animate-shimmer" />
+                <div className="mx-auto h-2 w-16 rounded bg-neutral-800 animate-shimmer" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -272,14 +283,14 @@ function EmployeeDetail({ emp }: { emp: EmployeeRow }) {
           <button
             type="button"
             onClick={() => download(emp.job_card_url, `${emp.username}-job-alert.png`)}
-            className="flex-1 rounded border border-neutral-700 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400 transition-colors hover:text-white"
+            className="flex-1 rounded border border-neutral-700 bg-neutral-900 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400 transition-all hover:border-neutral-500 hover:bg-neutral-800 hover:text-white active:scale-95"
           >
             ↓ DOWNLOAD CARD
           </button>
           <button
             type="button"
             onClick={() => download(emp.badge_url, `${emp.username}-badge.png`)}
-            className="flex-1 rounded border border-neutral-700 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400 transition-colors hover:text-white"
+            className="flex-1 rounded border border-neutral-700 bg-neutral-900 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400 transition-all hover:border-neutral-500 hover:bg-neutral-800 hover:text-white active:scale-95"
           >
             ↓ DOWNLOAD BADGE
           </button>

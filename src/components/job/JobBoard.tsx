@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Role } from "@/lib/job/types";
+import { useToast } from "@/components/ui/Toast";
 
 type JobCard = {
   id: number;
@@ -157,6 +158,7 @@ const JOBS: JobCard[] = [
 
 export default function JobBoard() {
   const [copied, setCopied] = useState<number | null>(null);
+  const { toast } = useToast();
 
   function copyScript(id: number, text: string) {
     navigator.clipboard
@@ -165,7 +167,9 @@ export default function JobBoard() {
         setCopied(id);
         setTimeout(() => setCopied(null), 2000);
       })
-      .catch(() => {});
+      .catch(() => {
+        toast("Copy failed — select and copy manually", "error");
+      });
   }
 
   return (

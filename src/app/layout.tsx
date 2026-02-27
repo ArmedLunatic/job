@@ -4,6 +4,10 @@ import "./globals.css";
 import PayrollStrip from "@/components/job/PayrollStrip";
 import { ToastProvider } from "@/components/ui/Toast";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -15,6 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "$JOB — AI Took Your Job. We're Hiring.",
   description:
     "AI took your job. Good news: $JOB is hiring. Hold $JOB, get paid hourly from creator fee payroll. No resume, no boss, no office.",
@@ -23,6 +28,14 @@ export const metadata: Metadata = {
     description:
       "Hold $JOB, earn hourly. Generate your Job Alert Card and Badge PFP. Clock in now.",
     type: "website",
+    images: [{ url: "/job/job-icon.png", width: 512, height: 512, alt: "$JOB" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "$JOB — AI Took Your Job. We're Hiring.",
+    description:
+      "Hold $JOB, earn hourly. Generate your Job Alert Card and Badge PFP. Clock in now.",
+    images: ["/job/job-icon.png"],
   },
 };
 

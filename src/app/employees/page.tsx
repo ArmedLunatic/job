@@ -8,6 +8,13 @@ export const metadata = {
     title: "Employee Wall — $JOB",
     description: "Browse everyone who clocked in and published their $JOB badge.",
     type: "website" as const,
+    images: [{ url: "/job/job-icon.png", width: 512, height: 512, alt: "$JOB" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "Employee Wall — $JOB",
+    description: "Browse everyone who clocked in and published their $JOB badge.",
+    images: ["/job/job-icon.png"],
   },
 };
 

@@ -52,6 +52,12 @@ export default function ClockInForm() {
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0] ?? null;
+    if (f && f.size > 4 * 1024 * 1024) {
+      setGenError("Photo must be 4 MB or smaller.");
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
+    setGenError(null);
     setAvatarFile(f);
     if (preview) URL.revokeObjectURL(preview);
     setPreview(f ? URL.createObjectURL(f) : null);
