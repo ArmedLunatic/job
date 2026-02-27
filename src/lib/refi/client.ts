@@ -65,7 +65,7 @@ export async function fetchCycles(limit = 10): Promise<RefiCycle[]> {
     sol_claimed: parseFloat(c.claimedSol ?? "0") || 0,
     sol_distributed: parseFloat(c.distributedSol ?? "0") || 0,
     holders_paid: c.holdersPaid ?? 0,
-    timestamp: c.ranAt ?? "",
+    timestamp: c.ranAt ? c.ranAt.replace(" ", "T") + "Z" : "",
   }));
 }
 
@@ -110,7 +110,7 @@ export async function fetchAllRefiData(): Promise<RefiData> {
       sol_claimed: parseFloat(c.claimedSol ?? "0") || 0,
       sol_distributed: parseFloat(c.distributedSol ?? "0") || 0,
       holders_paid: c.holdersPaid ?? 0,
-      timestamp: c.ranAt ?? "",
+      timestamp: c.ranAt ? c.ranAt.replace(" ", "T") + "Z" : "",
     })
   );
 
