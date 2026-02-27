@@ -13,13 +13,13 @@ import BadgePreview from "@/components/job/BadgePreview";
 import PublishPanel from "@/components/job/PublishPanel";
 
 const ROLES: { value: Role; label: string }[] = [
-  { value: "engineer", label: "Engineer" },
-  { value: "designer", label: "Designer" },
-  { value: "product", label: "Product Manager" },
-  { value: "operations", label: "Operations" },
-  { value: "marketing", label: "Marketing" },
-  { value: "leadership", label: "Leadership" },
-  { value: "other", label: "Other" },
+  { value: "marketing", label: "Chief Shill Officer" },
+  { value: "designer", label: "Meme Guy" },
+  { value: "other", label: "Shitposter / Diamond Hands" },
+  { value: "operations", label: "Head of HR" },
+  { value: "product", label: "Community Guy" },
+  { value: "leadership", label: "C-Suite Executive" },
+  { value: "engineer", label: "Full-Stack Dev" },
 ];
 
 const STAMPS: { value: Stamp; label: string; emoji: string }[] = [
@@ -33,7 +33,7 @@ const STAMPS: { value: Stamp; label: string; emoji: string }[] = [
 
 export default function ClockInForm() {
   const [username, setUsername] = useState("");
-  const [role, setRole] = useState<Role>("engineer");
+  const [role, setRole] = useState<Role>("marketing");
   const [stamp, setStamp] = useState<Stamp>("none");
   const [avatarMode, setAvatarMode] = useState<"default" | "upload">("default");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
