@@ -73,6 +73,10 @@ export default function ClockInForm() {
         role,
         stamp,
         avatarSource,
+        alertLabel: "Paid hourly",
+        jobTitle: "Full-Time Holder at $JOB",
+        primaryBtn: "Buy $JOB",
+        secondaryBtn: "Congrats 💙",
       });
       setAlertResult(result);
     } catch (e) {

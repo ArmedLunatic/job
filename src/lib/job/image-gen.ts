@@ -8,6 +8,11 @@ export type ImageGenOpts = {
   role: string;
   stamp: Stamp;
   avatarSource: AvatarSource;
+  // Job Alert Card copy — defaults to $JOB-themed strings
+  alertLabel?: string;   // header right of logo, e.g. "Paid hourly"
+  jobTitle?: string;     // subtitle under username, e.g. "Full-Time Holder at $JOB"
+  primaryBtn?: string;   // filled blue button, e.g. "Buy $JOB"
+  secondaryBtn?: string; // outlined button, e.g. "Congrats 💙"
 };
 
 export type ImageGenResult = { blob: Blob; url: string };
@@ -192,7 +197,7 @@ export async function generateJobAlertCard(
 
   ctx.font = `500 15px ${FONT}`;
   ctx.fillStyle = "#6B7280";
-  ctx.fillText("New job alert", headerTextX + 60, HEADER_H / 2);
+  ctx.fillText(opts.alertLabel ?? "Paid hourly", headerTextX + 60, HEADER_H / 2);
 
   // ── Avatar ──────────────────────────────────────────────────────────────────
   const AV_R = 72;
@@ -216,7 +221,7 @@ export async function generateJobAlertCard(
   // Subtitle
   ctx.font = `400 22px ${FONT}`;
   ctx.fillStyle = "#6B7280";
-  ctx.fillText("just started a new $job", TX, AV_CY - AV_R + 48);
+  ctx.fillText(opts.jobTitle ?? "Full-Time Holder at $JOB", TX, AV_CY - AV_R + 48);
 
   // Role pill
   const PILL_LABEL =
@@ -242,7 +247,7 @@ export async function generateJobAlertCard(
   const RIGHT_EDGE = W - 60;
 
   // "Send a message" (filled blue)
-  const MSG = "Send a message";
+  const MSG = opts.primaryBtn ?? "Buy $JOB";
   ctx.font = `600 17px ${FONT}`;
   const mW = ctx.measureText(MSG).width + 40;
   const MX = RIGHT_EDGE - mW;
@@ -255,7 +260,7 @@ export async function generateJobAlertCard(
   ctx.fillText(MSG, MX + 20, BTN_CY);
 
   // "Congrats 💙" (outlined)
-  const CG = "Congrats 💙";
+  const CG = opts.secondaryBtn ?? "Congrats 💙";
   ctx.font = `600 17px ${FONT}`;
   const cW = ctx.measureText(CG).width + 40;
   const CX = MX - cW - 12;
