@@ -21,22 +21,87 @@ async function refiGet<T>(path: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-// ─── Endpoint fetchers ────────────────────────────────────────────────────────
+// ─── Endpoint fetchers ─────────────────────────────────────────────────────
+// Each fetcher maps the raw API shape → our clean internal type.
+// Raw shapes confirmed from live API 2026-02-27.
 
+// GET / → { token: { symbol, name, imageUrl, rewardMode, ... }, stats: { total_cycles, total_distributed, ... } }
 export async function fetchTokenStats(): Promise<RefiTokenStats> {
-  return refiGet<RefiTokenStats>("");
+  const raw = await refiGet<{
+    token: {
+      symbol: string;
+      name: string;
+      imageUrl: string;
+      rewardMode: string;
+    };
+    stats: {
+      total_cycles: number | null;
+      total_distributed: string | null;
+    };
+  }>("");
+  return {
+    symbol: raw.token.symbol,
+    name: raw.token.name,
+    image: raw.token.imageUrl,
+    total_distributed: raw.stats.total_distributed != null
+      ? parseFloat(raw.stats.total_distributed)
+      : 0,
+    cycle_count: raw.stats.total_cycles ?? 0,
+    reward_mode: raw.token.rewardMode,
+  };
 }
 
+// GET /cycles → { cycles: Array<{ sol_claimed, sol_distributed, holders_paid, timestamp }> }
 export async function fetchCycles(limit = 10): Promise<RefiCycle[]> {
-  return refiGet<RefiCycle[]>(`/cycles?limit=${limit}`);
+  const raw = await refiGet<{
+    cycles: Array<{
+      sol_claimed?: number;
+      sol_distributed?: number;
+      holders_paid?: number;
+      timestamp?: string;
+      // camelCase fallbacks in case API uses those
+      solClaimed?: number;
+      solDistributed?: number;
+      holdersPaid?: number;
+    }>;
+  }>(`/cycles?limit=${limit}`);
+  return (raw.cycles ?? []).map((c) => ({
+    sol_claimed: c.sol_claimed ?? c.solClaimed ?? 0,
+    sol_distributed: c.sol_distributed ?? c.solDistributed ?? 0,
+    holders_paid: c.holders_paid ?? c.holdersPaid ?? 0,
+    timestamp: c.timestamp ?? "",
+  }));
 }
 
+// GET /lottery → { draws: Array<{ drawNumber, drawnAt, potSol (string), seedHex, winners: [{ address }] }> }
 export async function fetchLottery(limit = 10): Promise<RefiLotteryDraw[]> {
-  return refiGet<RefiLotteryDraw[]>(`/lottery?limit=${limit}`);
+  const raw = await refiGet<{
+    draws: Array<{
+      drawNumber: number;
+      drawnAt: string;
+      potSol: string;
+      seedHex: string;
+      winners: Array<{ address: string }>;
+    }>;
+  }>(`/lottery?limit=${limit}`);
+  return (raw.draws ?? []).map((d) => ({
+    draw_number: d.drawNumber,
+    winners: (d.winners ?? []).map((w) => w.address),
+    pot_size: parseFloat(d.potSol) || 0,
+    seed_hash: d.seedHex,
+    timestamp: d.drawnAt,
+  }));
 }
 
+// GET /logs → { logs: Array<{ ts (ISO), level, message }> }
 export async function fetchLogs(): Promise<RefiLogEntry[]> {
-  return refiGet<RefiLogEntry[]>("/logs?limit=60");
+  const raw = await refiGet<{
+    logs: Array<{ ts: string; level?: string; message: string }>;
+  }>("/logs?limit=60");
+  return (raw.logs ?? []).map((e) => ({
+    message: e.message,
+    timestamp: e.ts,
+  }));
 }
 
 // ─── Aggregate fetch (partial failure resilient) ──────────────────────────────
@@ -60,7 +125,7 @@ export async function fetchAllRefiData(): Promise<RefiData> {
 
 // ─── Formatting helpers ───────────────────────────────────────────────────────
 
-/** Format a SOL number to a readable string, e.g. "12.45 SOL" */
+/** Format a SOL amount, e.g. "12.45 SOL" */
 export function fmtSol(sol: number): string {
   if (sol === 0) return "0 SOL";
   if (sol >= 1000) return `${(sol / 1000).toFixed(2)}K SOL`;
@@ -70,6 +135,7 @@ export function fmtSol(sol: number): string {
 
 /** Relative time from ISO string, e.g. "3h ago" */
 export function fmtRelativeTime(iso: string): string {
+  if (!iso) return "—";
   const diff = Date.now() - new Date(iso).getTime();
   const secs = Math.floor(diff / 1000);
   if (secs < 60) return `${secs}s ago`;
