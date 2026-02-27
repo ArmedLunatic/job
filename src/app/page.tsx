@@ -6,7 +6,7 @@ import ReFiStats from "@/components/job/ReFiStats";
 const RUNNR_BUY_URL =
   "https://runnr.trade/token/12yc14qer8X8kb3mn5S6LDZy4oKwe2uVdME4LJ2qpump?ref=ash";
 // Update X_COMMUNITY_URL once your X community is live
-const X_COMMUNITY_URL = "https://x.com/search?q=%24JOB&src=typed_query&f=live";
+const X_COMMUNITY_URL = "https://twitter.com/i/communities/2027220668379468230";
 
 export default function Home() {
   return (
