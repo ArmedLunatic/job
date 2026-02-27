@@ -230,7 +230,7 @@ export default function Home() {
 const FAQS = [
   {
     q: "How do I get paid?",
-    a: "$JOB distributes a portion of creator fees to holders as hourly payroll. The more $JOB you hold, the larger your share. Payroll estimates are displayed in the strip above and are updated periodically. Payouts are not guaranteed — this is a memecoin.",
+    a: "95% of all $JOB creator fees are distributed to holders as hourly payroll. The remaining 5% goes to ReFi to fund the payroll infrastructure. The more $JOB you hold, the larger your share of the 95%. Payroll estimates are displayed in the strip above and are updated periodically. Payouts are not guaranteed — this is a memecoin.",
   },
   {
     q: "Do I need a resume?",

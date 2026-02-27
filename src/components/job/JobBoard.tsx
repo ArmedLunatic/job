@@ -9,8 +9,6 @@ type JobCard = {
   title: string;
   role: Role;
   emoji: string;
-  multiplier: string;
-  multiplierColor: string;
   borderColor: string;
   description: string;
   tasks: string[];
@@ -23,8 +21,6 @@ const JOBS: JobCard[] = [
     title: "Chief Shill Officer",
     role: "marketing",
     emoji: "📣",
-    multiplier: "2x",
-    multiplierColor: "bg-blue-600",
     borderColor: "border-l-blue-600",
     description: "Spread the $JOB gospel across all platforms.",
     tasks: [
@@ -40,8 +36,6 @@ const JOBS: JobCard[] = [
     title: "Meme Guy",
     role: "designer",
     emoji: "🐸",
-    multiplier: "1.5x",
-    multiplierColor: "bg-purple-600",
     borderColor: "border-l-purple-600",
     description: "If it's funny and has $JOB in it, that's your responsibility.",
     tasks: [
@@ -57,8 +51,6 @@ const JOBS: JobCard[] = [
     title: "Shitposter",
     role: "other",
     emoji: "💩",
-    multiplier: "3x",
-    multiplierColor: "bg-yellow-500",
     borderColor: "border-l-yellow-500",
     description: "Flood the timeline. Quantity IS quality.",
     tasks: [
@@ -74,8 +66,6 @@ const JOBS: JobCard[] = [
     title: "Head of HR",
     role: "operations",
     emoji: "📋",
-    multiplier: "1x",
-    multiplierColor: "bg-neutral-600",
     borderColor: "border-l-neutral-600",
     description: "Recruit new employees to the $JOB family.",
     tasks: [
@@ -91,8 +81,6 @@ const JOBS: JobCard[] = [
     title: "Community Guy",
     role: "product",
     emoji: "🤝",
-    multiplier: "1.5x",
-    multiplierColor: "bg-teal-600",
     borderColor: "border-l-teal-600",
     description: "Keep the $JOB family together. You know everyone. Everyone knows you.",
     tasks: [
@@ -108,8 +96,6 @@ const JOBS: JobCard[] = [
     title: "C-Suite Executive",
     role: "leadership",
     emoji: "👑",
-    multiplier: "2x",
-    multiplierColor: "bg-amber-600",
     borderColor: "border-l-amber-600",
     description: "Executive-level posting with gravitas.",
     tasks: [
@@ -125,8 +111,6 @@ const JOBS: JobCard[] = [
     title: "Full-Stack Dev",
     role: "engineer",
     emoji: "💻",
-    multiplier: "1.5x",
-    multiplierColor: "bg-blue-500",
     borderColor: "border-l-blue-500",
     description: "Build tools, bots, and integrations for $JOB.",
     tasks: [
@@ -142,8 +126,6 @@ const JOBS: JobCard[] = [
     title: "Diamond Hands",
     role: "other",
     emoji: "💎",
-    multiplier: "UNFIREABLE",
-    multiplierColor: "bg-red-600",
     borderColor: "border-l-red-600",
     description: "-90%? Buying more. You are the floor.",
     tasks: [
@@ -225,14 +207,9 @@ function JobCardItem({
       className={`group flex flex-col rounded border border-neutral-800 border-l-4 ${job.borderColor} bg-neutral-900/50 transition-all duration-200 hover:border-neutral-600 hover:bg-neutral-900 hover:shadow-lg hover:shadow-neutral-900/60`}
     >
       {/* Card header bar */}
-      <div className="flex items-center justify-between border-b border-neutral-800 bg-neutral-900 px-4 py-2">
+      <div className="flex items-center border-b border-neutral-800 bg-neutral-900 px-4 py-2">
         <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">
           REF: {refNum}
-        </span>
-        <span
-          className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold text-white ${job.multiplierColor}`}
-        >
-          {job.multiplier}
         </span>
       </div>
 
