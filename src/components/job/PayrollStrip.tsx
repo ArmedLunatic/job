@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   fetchAllRefiData,
   fmtSol,
@@ -8,11 +8,22 @@ import {
 } from "@/lib/refi/client";
 import type { RefiData, RefiLoadState } from "@/lib/refi/types";
 
-function secondsToNextHour(): number {
-  const now = new Date();
-  const next = new Date(now);
-  next.setHours(now.getHours() + 1, 0, 0, 0);
-  return Math.max(0, Math.floor((next.getTime() - now.getTime()) / 1000));
+const PAYOUT_INTERVAL_MS = 3600 * 1000; // ReFi runs every 1 hour
+
+function secondsToNextPayout(lastCycleTimestamp?: string): number {
+  const now = Date.now();
+  if (lastCycleTimestamp) {
+    const lastRun = new Date(lastCycleTimestamp).getTime();
+    if (!isNaN(lastRun)) {
+      const next = lastRun + PAYOUT_INTERVAL_MS;
+      return Math.max(0, Math.floor((next - now) / 1000));
+    }
+  }
+  // Fallback before data loads: next top of hour
+  const nowDate = new Date(now);
+  const next = new Date(nowDate);
+  next.setHours(nowDate.getHours() + 1, 0, 0, 0);
+  return Math.max(0, Math.floor((next.getTime() - now) / 1000));
 }
 
 function fmt(secs: number): string {
@@ -27,13 +38,26 @@ function fmt(secs: number): string {
 }
 
 export default function PayrollStrip() {
-  const [secs, setSecs] = useState(secondsToNextHour());
+  const [secs, setSecs] = useState(secondsToNextPayout());
   const [data, setData] = useState<RefiData | null>(null);
   const [loadState, setLoadState] = useState<RefiLoadState>("idle");
 
-  // Countdown timer
+  // Keep a ref to the latest cycle timestamp so the interval always has fresh data
+  const lastCycleTsRef = useRef<string | undefined>(undefined);
+
+  // Sync ref + re-initialise countdown whenever cycle data arrives
   useEffect(() => {
-    const id = setInterval(() => setSecs(secondsToNextHour()), 1000);
+    const ts = data?.cycles?.[0]?.timestamp;
+    lastCycleTsRef.current = ts;
+    setSecs(secondsToNextPayout(ts));
+  }, [data]);
+
+  // Countdown timer — ticks every second using the ref value
+  useEffect(() => {
+    const id = setInterval(
+      () => setSecs(secondsToNextPayout(lastCycleTsRef.current)),
+      1000
+    );
     return () => clearInterval(id);
   }, []);
 
