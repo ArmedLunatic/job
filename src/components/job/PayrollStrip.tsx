@@ -111,21 +111,31 @@ export default function PayrollStrip() {
             </span>
           </div>
 
-          {/* Ticker cells */}
+          {/* Ticker cells — hide lower-priority ones on mobile to prevent overflow */}
           <Ticker label="LAST CYCLE" value={lastCycleSol} color="text-green-400" />
-          <Ticker label="TOTAL DIST" value={totalDistSol} color="text-blue-400" />
-          <Ticker label="CYCLES" value={cycleCount} color="text-purple-400" />
+          <Ticker label="TOTAL DIST" value={totalDistSol} color="text-blue-400" className="hidden sm:inline-flex" />
+          <Ticker label="CYCLES" value={cycleCount} color="text-purple-400" className="hidden sm:inline-flex" />
           <Ticker label="NEXT PAYROLL" value={fmt(secs)} color="text-yellow-400" flash />
         </div>
 
-        {/* Right: disclaimer */}
-        <span
-          className={`hidden items-center border-l border-neutral-800 px-3 py-1.5 text-[10px] sm:flex whitespace-nowrap tracking-widest uppercase font-mono ${
-            isError ? "text-red-500/70" : "text-neutral-700"
-          }`}
-        >
-          {disclaimer}
-        </span>
+        {/* Right: disclaimer (sm+ only) + buy link (always visible) */}
+        <div className="flex items-stretch">
+          <span
+            className={`hidden sm:flex items-center border-l border-neutral-800 px-3 py-1.5 text-[10px] whitespace-nowrap tracking-widest uppercase font-mono ${
+              isError ? "text-red-500/70" : "text-neutral-700"
+            }`}
+          >
+            {disclaimer}
+          </span>
+          <a
+            href="https://runnr.trade/token/QQ2FpXD65ni9nrxpkEJFG4RMstzCKGMUp1Lqwzipump?ref=ash"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center border-l border-neutral-800 px-3 py-1.5 font-mono text-[10px] tracking-widest uppercase text-green-500/60 whitespace-nowrap transition-colors hover:text-green-400"
+          >
+            Buy ↗
+          </a>
+        </div>
       </div>
     </div>
   );
@@ -136,14 +146,16 @@ function Ticker({
   value,
   color,
   flash,
+  className,
 }: {
   label: string;
   value: string;
   color: string;
   flash?: boolean;
+  className?: string;
 }) {
   return (
-    <span className="inline-flex items-center gap-2 border-r border-neutral-800 px-3 py-1.5">
+    <span className={`inline-flex items-center gap-2 border-r border-neutral-800 px-3 py-1.5 ${className ?? ""}`}>
       <span className="text-neutral-600 tracking-widest text-[10px] uppercase">
         [{label}]
       </span>

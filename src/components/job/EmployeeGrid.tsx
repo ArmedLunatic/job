@@ -159,7 +159,7 @@ export default function EmployeeGrid() {
             {employees.length > visible.length &&
               ` OF ${employees.length} SHOWN`}
           </p>
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {visible.map((emp) => (
               <EmployeeCard
                 key={emp.id}

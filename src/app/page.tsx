@@ -2,6 +2,12 @@ import ClockInForm from "@/components/job/ClockInForm";
 import JobBoard from "@/components/job/JobBoard";
 import ReFiStats from "@/components/job/ReFiStats";
 
+// ─── External links ───────────────────────────────────────────────────────────
+const RUNNR_BUY_URL =
+  "https://runnr.trade/token/QQ2FpXD65ni9nrxpkEJFG4RMstzCKGMUp1Lqwzipump?ref=ash";
+// Update X_COMMUNITY_URL once your X community is live
+const X_COMMUNITY_URL = "https://x.com/search?q=%24JOB&src=typed_query&f=live";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-neutral-950">
@@ -14,6 +20,24 @@ export default function Home() {
             backgroundImage:
               "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
+          }}
+        />
+
+        {/* Blue atmospheric glow — top center */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 75% 45% at 50% -5%, rgba(59,130,246,0.18) 0%, transparent 70%)",
+          }}
+        />
+
+        {/* Subtle accent glow — bottom right */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 40% 30% at 85% 80%, rgba(99,102,241,0.07) 0%, transparent 60%)",
           }}
         />
 
@@ -47,23 +71,51 @@ export default function Home() {
             Job description: shill, post, meme.
           </p>
 
-          {/* CTAs */}
-          <div className="animate-fade-in-up delay-320 flex flex-wrap items-center justify-center gap-3">
+          {/* CTAs — 2-col grid on mobile, flex wrap on sm+ */}
+          <div className="animate-fade-in-up delay-320 grid w-full grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center">
+            {/* Buy on Runnr — primary trading action */}
+            <a
+              href={RUNNR_BUY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center rounded border border-green-500/40 bg-green-500/10 px-5 py-3.5 text-sm font-bold text-green-400 transition-all duration-200 hover:border-green-400/70 hover:bg-green-500/20 hover:text-green-300 hover:shadow-lg hover:shadow-green-500/20 active:scale-95 sm:px-7"
+            >
+              Buy on Runnr ↗
+            </a>
+
+            {/* Clock In */}
             <a
               href="#clock-in"
-              className="rounded bg-blue-600 px-7 py-3.5 text-sm font-bold text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-600/30 active:scale-95"
+              className="flex items-center justify-center rounded bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition-all duration-200 hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-600/30 active:scale-95 sm:px-7"
             >
               Clock In →
             </a>
+
+            {/* View Job Board */}
             <a
               href="#job-board"
-              className="rounded border border-neutral-700 bg-neutral-900 px-7 py-3.5 text-sm font-bold text-white transition-all hover:border-neutral-500 hover:bg-neutral-800 active:scale-95"
+              className="flex items-center justify-center rounded border border-neutral-700 bg-neutral-900 px-5 py-3.5 text-sm font-bold text-white transition-all duration-200 hover:border-neutral-500 hover:bg-neutral-800 active:scale-95 sm:px-7"
             >
               View Job Board
             </a>
+
+            {/* X Community */}
+            <a
+              href={X_COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded border border-neutral-800 px-5 py-3.5 text-sm font-medium text-neutral-400 transition-all duration-200 hover:border-neutral-600 hover:text-white active:scale-95 sm:px-7"
+            >
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 fill-current" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              X Community
+            </a>
+
+            {/* Employee Wall — full width on mobile, auto on sm+ */}
             <a
               href="/employees"
-              className="rounded border border-neutral-800 px-7 py-3.5 text-sm font-medium text-neutral-400 transition-all hover:text-white hover:border-neutral-600 active:scale-95"
+              className="col-span-2 flex items-center justify-center rounded border border-neutral-800 px-5 py-3.5 text-sm font-medium text-neutral-400 transition-all duration-200 hover:text-white hover:border-neutral-600 active:scale-95 sm:col-auto sm:px-7"
             >
               Employee Wall
             </a>
@@ -102,10 +154,15 @@ export default function Home() {
             ].map((s, i) => (
               <div
                 key={s.label}
-                className={`
-                  relative flex flex-col items-center justify-center py-4 text-center
-                  ${i > 0 ? "border-l border-neutral-800" : ""}
-                `}
+                className={[
+                  "relative flex flex-col items-center justify-center py-4 text-center border-neutral-800",
+                  // Mobile 2-col: right column gets a left border
+                  i % 2 !== 0 ? "border-l" : "",
+                  // Mobile 2-col: second row gets a top border (cleared on sm+)
+                  i >= 2 ? "border-t sm:border-t-0" : "",
+                  // sm+ 4-col: every item except first gets a left border
+                  i > 0 ? "sm:border-l" : "",
+                ].filter(Boolean).join(" ")}
               >
                 <p className="mb-2 font-mono text-[10px] tracking-widest uppercase text-neutral-600">
                   [{s.label}]
@@ -133,14 +190,35 @@ export default function Home() {
 
       {/* ── Footer ────────────────────────────────────────────────────────────── */}
       <footer className="border-t border-neutral-800/60 py-10 text-center text-xs text-neutral-700">
+        <div className="mb-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+          <a
+            href={RUNNR_BUY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 font-mono text-[11px] tracking-widest uppercase text-green-600/70 transition-colors hover:text-green-400"
+          >
+            ↗ Buy on Runnr
+          </a>
+          <span className="text-neutral-800">·</span>
+          <a
+            href={X_COMMUNITY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 font-mono text-[11px] tracking-widest uppercase text-neutral-600 transition-colors hover:text-neutral-400"
+          >
+            <svg viewBox="0 0 24 24" className="h-3 w-3 fill-current" aria-hidden="true">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            X Community
+          </a>
+          <span className="text-neutral-800">·</span>
+          <a href="/employees" className="font-mono text-[11px] tracking-widest uppercase text-neutral-600 underline transition-colors hover:text-neutral-400">
+            Employee Wall
+          </a>
+        </div>
         <p>
           $JOB is a memecoin. Not financial advice. Payroll estimates are
           estimates. Crypto is risky. This site does not connect wallets.
-        </p>
-        <p className="mt-2">
-          <a href="/employees" className="underline hover:text-neutral-500">
-            Employee Wall
-          </a>
         </p>
       </footer>
     </main>
