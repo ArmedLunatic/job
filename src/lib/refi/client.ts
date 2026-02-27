@@ -80,22 +80,48 @@ export async function fetchLogs(): Promise<RefiLogEntry[]> {
   }));
 }
 
-// ─── Aggregate fetch (partial failure resilient) ──────────────────────────────
+// ─── Aggregate fetch via server proxy (avoids browser CORS block) ────────────
 
 export async function fetchAllRefiData(): Promise<RefiData> {
-  const [statsResult, cyclesResult, logsResult] =
-    await Promise.allSettled([
-      fetchTokenStats(),
-      fetchCycles(10),
-      fetchLogs(),
-    ]);
+  const raw = await fetch("/api/refi", { cache: "no-store" })
+    .then((r) => (r.ok ? r.json() : null))
+    .catch(() => null);
 
-  return {
-    stats: statsResult.status === "fulfilled" ? statsResult.value : null,
-    cycles: cyclesResult.status === "fulfilled" ? cyclesResult.value : [],
-    lottery: [],
-    logs: logsResult.status === "fulfilled" ? logsResult.value : [],
-  };
+  if (!raw) return { stats: null, cycles: [], lottery: [], logs: [] };
+
+  // Map raw API shapes → internal types
+  let stats: RefiTokenStats | null = null;
+  if (raw.stats?.token && raw.stats?.stats) {
+    const s = raw.stats;
+    stats = {
+      symbol: s.token.symbol,
+      name: s.token.name,
+      image: s.token.imageUrl,
+      total_distributed: s.stats.total_distributed != null
+        ? s.stats.total_distributed / 1e9
+        : 0,
+      cycle_count: s.stats.total_cycles ?? 0,
+      reward_mode: s.token.rewardMode,
+    };
+  }
+
+  const cycles: RefiCycle[] = (raw.cycles?.cycles ?? []).map(
+    (c: { ranAt?: string; claimedSol?: string; distributedSol?: string; holdersPaid?: number }) => ({
+      sol_claimed: parseFloat(c.claimedSol ?? "0") || 0,
+      sol_distributed: parseFloat(c.distributedSol ?? "0") || 0,
+      holders_paid: c.holdersPaid ?? 0,
+      timestamp: c.ranAt ?? "",
+    })
+  );
+
+  const logs: RefiLogEntry[] = (raw.logs?.logs ?? []).map(
+    (e: { ts: string; message: string }) => ({
+      message: e.message,
+      timestamp: e.ts,
+    })
+  );
+
+  return { stats, cycles, lottery: [], logs };
 }
 
 // ─── Formatting helpers ───────────────────────────────────────────────────────
