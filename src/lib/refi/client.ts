@@ -1,7 +1,6 @@
 import type {
   RefiTokenStats,
   RefiCycle,
-  RefiLotteryDraw,
   RefiLogEntry,
   RefiData,
 } from "./types";
@@ -73,26 +72,6 @@ export async function fetchCycles(limit = 10): Promise<RefiCycle[]> {
   }));
 }
 
-// GET /lottery → { draws: Array<{ drawNumber, drawnAt, potSol (string), seedHex, winners: [{ address }] }> }
-export async function fetchLottery(limit = 10): Promise<RefiLotteryDraw[]> {
-  const raw = await refiGet<{
-    draws: Array<{
-      drawNumber: number;
-      drawnAt: string;
-      potSol: string;
-      seedHex: string;
-      winners: Array<{ address: string }>;
-    }>;
-  }>(`/lottery?limit=${limit}`);
-  return (raw.draws ?? []).map((d) => ({
-    draw_number: d.drawNumber,
-    winners: (d.winners ?? []).map((w) => w.address),
-    pot_size: parseFloat(d.potSol) || 0,
-    seed_hash: d.seedHex,
-    timestamp: d.drawnAt,
-  }));
-}
-
 // GET /logs → { logs: Array<{ ts (ISO), level, message }> }
 export async function fetchLogs(): Promise<RefiLogEntry[]> {
   const raw = await refiGet<{
@@ -107,18 +86,17 @@ export async function fetchLogs(): Promise<RefiLogEntry[]> {
 // ─── Aggregate fetch (partial failure resilient) ──────────────────────────────
 
 export async function fetchAllRefiData(): Promise<RefiData> {
-  const [statsResult, cyclesResult, lotteryResult, logsResult] =
+  const [statsResult, cyclesResult, logsResult] =
     await Promise.allSettled([
       fetchTokenStats(),
       fetchCycles(10),
-      fetchLottery(10),
       fetchLogs(),
     ]);
 
   return {
     stats: statsResult.status === "fulfilled" ? statsResult.value : null,
     cycles: cyclesResult.status === "fulfilled" ? cyclesResult.value : [],
-    lottery: lotteryResult.status === "fulfilled" ? lotteryResult.value : [],
+    lottery: [],
     logs: logsResult.status === "fulfilled" ? logsResult.value : [],
   };
 }

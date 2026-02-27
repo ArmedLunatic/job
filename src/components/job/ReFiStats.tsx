@@ -64,11 +64,8 @@ export default function ReFiStats() {
         {/* Token stats bar */}
         <TokenStatsBar data={data} loading={showSkeleton} error={loadState === "error"} />
 
-        {/* Two-column: cycle history + lottery */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <CycleHistoryTable data={data} loading={showSkeleton} error={loadState === "error"} />
-          <LotteryHistoryPanel data={data} loading={showSkeleton} error={loadState === "error"} />
-        </div>
+        {/* Cycle history */}
+        <CycleHistoryTable data={data} loading={showSkeleton} error={loadState === "error"} />
 
         {/* Activity log */}
         <ActivityLogFeed data={data} loading={showSkeleton} error={loadState === "error"} />
@@ -304,7 +301,7 @@ function ReFiIframeWidget() {
       <div className="portal-header">REFI.GG — LIVE TOKEN WIDGET</div>
       <div className="p-4">
         <iframe
-          src={`https://refi.gg/embed/tokens/${REFI_CA}`}
+          src={`https://refi.gg/embed/${REFI_CA}`}
           width="100%"
           height="190"
           style={{ borderRadius: "12px", border: "none", display: "block" }}
