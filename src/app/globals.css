@@ -203,6 +203,49 @@ details .faq-content > div {
   overflow: hidden;
 }
 
+/* ─── Lore Wall — masonry grid ──────────────────────────────────────────────── */
+
+.lore-masonry {
+  columns: 1;
+  column-gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .lore-masonry { columns: 2; }
+}
+
+@media (min-width: 1024px) {
+  .lore-masonry { columns: 3; }
+}
+
+.lore-masonry-item {
+  break-inside: avoid;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* react-tweet — integrate with site dark palette */
+[data-theme="dark"] .react-tweet-theme {
+  --tweet-bg: #0d0d0d;
+  --tweet-border: 1px solid transparent;
+  --tweet-border-radius: 0px;
+  --tweet-container-margin: 0;
+  --tweet-header-font-color: #e5e5e5;
+  --tweet-font-color: #d4d4d4;
+  --tweet-font-color-secondary: #737373;
+  --tweet-body-font-size: 15px;
+  --tweet-body-line-height: 22px;
+  --tweet-twitterBlue: #60a5fa;
+  --tweet-link-color: #60a5fa;
+  --tweet-replies-font-color: #60a5fa;
+  --tweet-actions-font-color: #404040;
+  --tweet-quoted-bg: #111111;
+  --tweet-quoted-border: 1px solid #262626;
+  --tweet-skeleton-bg: #111111;
+  --tweet-skeleton-gradient: linear-gradient(270deg, #0d0d0d, #1a1a1a, #0d0d0d);
+}
+
 /* ─── Portal utility classes ────────────────────────────────────────────────── */
 
 /* Hard-bordered panel with surface bg */

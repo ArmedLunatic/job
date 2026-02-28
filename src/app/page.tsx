@@ -120,10 +120,10 @@ export default function Home() {
               Employee Wall
             </a>
 
-            {/* Lore Wall — full width on mobile, auto on sm+ */}
+            {/* Lore Wall */}
             <a
               href="/lore"
-              className="col-span-2 flex items-center justify-center rounded border border-amber-900/50 bg-amber-950/20 px-5 py-3.5 text-sm font-medium text-amber-500/80 transition-all duration-200 hover:border-amber-700/60 hover:text-amber-400 active:scale-95 sm:col-auto sm:px-7"
+              className="flex items-center justify-center rounded border border-amber-900/50 bg-amber-950/20 px-5 py-3.5 text-sm font-medium text-amber-500/80 transition-all duration-200 hover:border-amber-700/60 hover:text-amber-400 active:scale-95 sm:px-7"
             >
               Lore Wall
             </a>
