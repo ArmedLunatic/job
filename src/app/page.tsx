@@ -1,5 +1,6 @@
 import ClockInForm from "@/components/job/ClockInForm";
 import JobBoard from "@/components/job/JobBoard";
+import LoreWall from "@/components/job/LoreWall";
 import ReFiStats from "@/components/job/ReFiStats";
 
 // ─── External links ───────────────────────────────────────────────────────────
@@ -114,9 +115,17 @@ export default function Home() {
             {/* Employee Wall — full width on mobile, auto on sm+ */}
             <a
               href="/employees"
-              className="col-span-2 flex items-center justify-center rounded border border-neutral-800 px-5 py-3.5 text-sm font-medium text-neutral-400 transition-all duration-200 hover:text-white hover:border-neutral-600 active:scale-95 sm:col-auto sm:px-7"
+              className="flex items-center justify-center rounded border border-neutral-800 px-5 py-3.5 text-sm font-medium text-neutral-400 transition-all duration-200 hover:text-white hover:border-neutral-600 active:scale-95 sm:px-7"
             >
               Employee Wall
+            </a>
+
+            {/* Lore Wall — full width on mobile, auto on sm+ */}
+            <a
+              href="/lore"
+              className="col-span-2 flex items-center justify-center rounded border border-amber-900/50 bg-amber-950/20 px-5 py-3.5 text-sm font-medium text-amber-500/80 transition-all duration-200 hover:border-amber-700/60 hover:text-amber-400 active:scale-95 sm:col-auto sm:px-7"
+            >
+              Lore Wall
             </a>
           </div>
         </div>
@@ -181,6 +190,9 @@ export default function Home() {
       {/* ── Job Board ─────────────────────────────────────────────────────────── */}
       <JobBoard />
 
+      {/* ── Lore Wall ─────────────────────────────────────────────────────────── */}
+      <LoreWall preview={true} />
+
       {/* ── ReFi Live Payroll Stats ────────────────────────────────────────────── */}
       <ReFiStats />
 
@@ -213,6 +225,10 @@ export default function Home() {
           <span className="text-neutral-800">·</span>
           <a href="/employees" className="font-mono text-[11px] tracking-widest uppercase text-neutral-600 underline transition-colors hover:text-neutral-400">
             Employee Wall
+          </a>
+          <span className="text-neutral-800">·</span>
+          <a href="/lore" className="font-mono text-[11px] tracking-widest uppercase text-amber-700/70 underline transition-colors hover:text-amber-500">
+            Lore Wall
           </a>
         </div>
         <p>
